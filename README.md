@@ -1,6 +1,6 @@
 # TPortal-API
 
-RESTful API for TPortal, a quantitative player analysis tool based off of their career statistics.
+RESTful API for TPortal, a quantitative college athlete analysis tool based off of their career statistics.
 
 ---
 ## /v1/players
