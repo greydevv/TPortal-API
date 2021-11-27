@@ -8,33 +8,34 @@ class Players(Resource):
         players = mongo.db.players
         pipeline = self.__build_pipeline(request.args)
         data = list(players.aggregate(pipeline))
-        return data
+        return {'retrieved': len(data), 'players': data}, 200
+    
+    def put(self):
+        if not request.json:
+            return {'updated': 0}, 200
+        players = mongo.db.players
+        pids = [e['pid'] for e in request.json]
+        players.delete_many({'pid': {'$in':pids}})
+        ins_result = players.insert_many(request.json)
+        return {'updated': len(ins_result.inserted_ids)}, 200
 
     def post(self):
         if not request.json:
-            return make_response({'status':204}, 204)
+            return {'inserted': 0}, 200
         players = mongo.db.players
         dup_pids = self.__get_dup_pids(request.json)
         if dup_pids:
             raise DuplicateKeyError(data=dup_pids)
-        players.insert_many(request.json)
-        # return make_response({'status':200}, 200)
-        return {'status': 200}
+        ins_result = players.insert_many(request.json)
+        return {'inserted': len(ins_result.inserted_ids)}, 200
 
     def delete(self):
+        if not request.json:
+            return {'deleted': 0}, 200
         players = mongo.db.players
-        dup_pids = self.__get_dup_pids(request.json)
-        if dup_pids:
-            raise DuplicateKeyError(data=dup_pids)
         pids = list(filter(lambda x: isinstance(x, str), request.json))
         result = players.delete_many({'pid': {'$in':pids}})
-        if result.deleted_count > 0:
-            return {'status': 200}, 200
-            # return make_response({'status':200}, 200)
-        else:
-            return {'status': 204}, 204
-            print(make_response({'status':204}, 204))
-            return make_response({'status':204}, 204)
+        return {'deleted': result.deleted_count}, 200
 
     @staticmethod
     def __build_pipeline(args):
@@ -59,9 +60,7 @@ class Players(Resource):
         players = mongo.db.players
         dup_pids = []
         if isinstance(json, list):
-            pids = json
-            if all(isinstance(e, dict) for e in json):
-                pids = [e['pid'] for e in json]
+            pids = [e['pid'] for e in json]
             dup_pids = [dup['pid'] for dup in players.find({'pid': {'$in':pids}})]
         else:
             if players.find_one({'pid':json['pid']}):
@@ -72,13 +71,13 @@ class Player(Resource):
     def get(self, pid):
         players = mongo.db.players
         data = players.find_one({'pid': pid}, {'_id': False})
-        if data:
-            return data
-        raise PlayerNotFoundError(data=pid)
+        if not data:
+            raise PlayerNotFoundError(data=pid)
+        return data, 200
 
     def delete(self, pid):
         players = mongo.db.players
         result = players.delete_one({'pid': pid})
-        if result.deleted_count == 1:
-            return make_response({'status': 200}, 200)
-        raise PlayerNotFoundError(data=pid)
+        if result.deleted_count == 0:
+            raise PlayerNotFoundError(data=pid)
+        return '', 200
