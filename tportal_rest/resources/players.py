@@ -8,34 +8,35 @@ class Players(Resource):
         players = mongo.db.players
         pipeline = self.__build_pipeline(request.args)
         data = list(players.aggregate(pipeline))
-        return {'retrieved': len(data), 'players': data}, 200
+        return data, 200
     
     def put(self):
         if not request.json:
-            return {'updated': 0}, 200
+            return '', 204
         players = mongo.db.players
         pids = [e['pid'] for e in request.json]
         players.delete_many({'pid': {'$in':pids}})
         ins_result = players.insert_many(request.json)
-        return {'updated': len(ins_result.inserted_ids)}, 200
+        return '', 204
 
     def post(self):
         if not request.json:
-            return {'inserted': 0}, 200
+            return [], 200
+            # return make_response({'pids':[]}, 200)
         players = mongo.db.players
         dup_pids = self.__get_dup_pids(request.json)
         if dup_pids:
             raise DuplicateKeyError(data=dup_pids)
         ins_result = players.insert_many(request.json)
-        return {'inserted': len(ins_result.inserted_ids)}, 200
+        return [e['pid'] for e in request.json], 200
 
     def delete(self):
         if not request.json:
-            return {'deleted': 0}, 200
+            return '', 204
         players = mongo.db.players
         pids = list(filter(lambda x: isinstance(x, str), request.json))
         result = players.delete_many({'pid': {'$in':pids}})
-        return {'deleted': result.deleted_count}, 200
+        return '', 204
 
     @staticmethod
     def __build_pipeline(args):
@@ -80,4 +81,4 @@ class Player(Resource):
         result = players.delete_one({'pid': pid})
         if result.deleted_count == 0:
             raise PlayerNotFoundError(data=pid)
-        return '', 200
+        return '', 204

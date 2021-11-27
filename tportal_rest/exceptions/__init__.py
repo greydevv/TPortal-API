@@ -4,8 +4,6 @@ from typing import List, Any
 class ApiException(Exception):
     def __init__(self, **kwargs):
         self.response = {}
-        if hasattr(self, 'code'):
-            self.response['status'] = self.code
         if hasattr(self, 'message'):
             self.response['message'] = self.message
         if kwargs:
