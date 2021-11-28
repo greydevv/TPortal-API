@@ -15,6 +15,9 @@ class Players(Resource):
             return '', 204
         players = mongo.db.players
         pids = [e['pid'] for e in request.json]
+        for pid in pids:
+            if not players.find_one({'pid': pid}, {'_id': False}):
+                raise PlayerNotFoundError(data=pid)
         players.delete_many({'pid': {'$in':pids}})
         ins_result = players.insert_many(request.json)
         return '', 204
