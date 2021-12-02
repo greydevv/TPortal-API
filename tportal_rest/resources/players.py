@@ -23,10 +23,8 @@ class Players(Resource):
         return '', 204
 
     def post(self):
-        print(request.json)
         if not request.json:
-            return {'message':'no JSON supplied'}, 200
-            # return make_response({'pids':[]}, 200)
+            return [], 200
         players = mongo.db.players
         dup_pids = self.__get_dup_pids(request.json)
         if dup_pids:
