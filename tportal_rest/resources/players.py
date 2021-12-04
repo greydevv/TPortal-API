@@ -23,6 +23,7 @@ class Players(Resource):
         return '', 204
 
     def post(self):
+        print(request.json)
         if not request.json:
             return [], 200
         players = mongo.db.players
