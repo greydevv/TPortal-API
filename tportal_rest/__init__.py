@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from flask_restful import Api
+from flask_cors import CORS
 from dotenv import load_dotenv
 from tportal_rest.ext import mongo
 from tportal_rest.resources.players import Players, Player
@@ -21,6 +22,7 @@ def get_mongo_uri():
 
 def create_app():
     app = Flask(__name__)
+    CORS(app);
     app.config['MONGO_URI'] = get_mongo_uri()
 
     mongo.init_app(app)
