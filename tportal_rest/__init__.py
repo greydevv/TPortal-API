@@ -22,7 +22,7 @@ def get_mongo_uri():
 
 def create_app():
     app = Flask(__name__)
-    CORS(app);
+    CORS(app)
     app.config['MONGO_URI'] = get_mongo_uri()
 
     mongo.init_app(app)
