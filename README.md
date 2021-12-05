@@ -1,6 +1,6 @@
-# TPortal-API
+# cloudscout-REST
 
-RESTful API for TPortal, a quantitative college athlete analysis tool based off of their career statistics.
+RESTful API for cloudscout, a quantitative college athlete analysis tool based on NCAA player statistics.
 
 ---
 ## /v1/players
