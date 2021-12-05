@@ -8,9 +8,9 @@ from tportal_rest.schema import FOOTBALL_SCHEMA
 def is_valid_json(json):
     try:
         jsonschema.validate(instance=json, schema=FOOTBALL_SCHEMA)
-        return True
-    except jsonschema.ValidationError:
-        return False
+        return True, None
+    except jsonschema.ValidationError as err:
+        return False, str(err)
 
 class Players(Resource):
     def get(self):
@@ -32,8 +32,9 @@ class Players(Resource):
         return '', 204
 
     def post(self):
-        if not is_valid_json(request.json):
-            return {'message': 'invalid JSON'}, 400
+        valid,invalid_reason = is_valid_json(request.json)
+        if not valid:
+            return {'message': 'invalid JSON', 'reason': invalid_reason}, 400
         players = mongo.db.players
         dup_pids = self.__get_dup_pids(request.json)
         if dup_pids:
