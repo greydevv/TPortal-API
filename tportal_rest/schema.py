@@ -7,14 +7,14 @@ FOOTBALL_SCHEMA = {
             "meta": {
                 "type": "object",
                 "properties": {
-                    'class': {'type': ['number', 'null'], 'enum': [1,2,3,4,5]},
+                    'class': {'type': ['number', 'null'], 'enum': [None,1,2,3,4,5]},
                     'conference': {'type': ['string', 'null']},
                     'date': {'type': ['string', 'null'], 'pattern': '^[0-9]*$'}, # Unix time epoch (seconds since Jan 1, 1970)
-                    'division': {'type': ['number', 'null'], 'enum': [1,2,3]},
+                    'division': {'type': ['number', 'null'], 'enum': [None,1,2,3]},
                     'first': {'type': ['string', 'null']},
                     'institution': {'type': ['string', 'null']},
                     'last': {'type': ['string', 'null']},
-                    'position': {'type': ['string', 'null'], 'enum': ['QB', 'WR', 'OL', 'RB', 'TE', 'C', 'OT', 'FB', 'DL', 'DT', 'DE', 'LB', 'DB', 'CB', 'S', 'P', 'K', 'LS']},
+                    'position': {'type': ['string', 'null'], 'enum': [None, 'QB', 'WR', 'OL', 'RB', 'TE', 'C', 'OT', 'FB', 'DL', 'DT', 'DE', 'LB', 'DB', 'CB', 'S', 'P', 'K', 'LS']},
                     # include gender?
                     'sport': {'type': ['string', 'null'], 'enum': ['Football', "Men's Basketball", "Women's Basketball", 'Baseball']},
                     'year': {'type': ['string', 'null'], 'pattern': '^[0-9]{2}-[0-9]{2}$'},
