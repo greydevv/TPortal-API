@@ -1,7 +1,16 @@
 from flask import request, make_response
 from flask_restful import Resource
+import jsonschema
 from tportal_rest.ext import mongo
 from tportal_rest.exceptions import PlayerNotFoundError, DuplicateKeyError
+from tportal_rest.schema import FOOTBALL_SCHEMA
+
+def is_valid_json(json):
+    try:
+        jsonschema.validate(instance=json, schema=FOOTBALL_SCHEMA)
+        return True
+    except jsonschema.ValidationError:
+        return False
 
 class Players(Resource):
     def get(self):
@@ -23,9 +32,8 @@ class Players(Resource):
         return '', 204
 
     def post(self):
-        print(request.json)
-        if not request.json:
-            return [], 200
+        if not is_valid_json(request.json):
+            return {'message': 'invalid JSON'}, 400
         players = mongo.db.players
         dup_pids = self.__get_dup_pids(request.json)
         if dup_pids:
