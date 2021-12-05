@@ -10,7 +10,7 @@ def is_valid_json(json):
         jsonschema.validate(instance=json, schema=FOOTBALL_SCHEMA)
         return True, None
     except jsonschema.ValidationError as err:
-        return False, str(err)
+        return False, err.message
 
 class Players(Resource):
     def get(self):
