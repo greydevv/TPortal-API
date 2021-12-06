@@ -1,4 +1,4 @@
-![banner](assets/cloudscout_restapi.png)
+![banner](assets/banner.png)
 ---
 # cloudscout-REST
 
