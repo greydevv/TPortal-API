@@ -1,6 +1,4 @@
 ![banner](assets/banner.png)
----
-# cloudscout-REST
 
 RESTful API for cloudscout, a tool for quantitative analysis of collegiate athletes eligible for recruitment.
 
