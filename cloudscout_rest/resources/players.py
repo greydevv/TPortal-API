@@ -66,7 +66,7 @@ class Players(Resource):
         if args.get('limit') and args.get('limit').isnumeric():
             pipeline.append({'$limit': int(args['limit'])})
         pipeline.append({'$project': {'_id': False}})
-        pipeline.append({'$sort': {'meta.date': -1}})
+        pipeline.append({'$sort': {'meta.date': 1}})
         return pipeline
 
     @staticmethod
