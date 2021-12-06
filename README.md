@@ -1,3 +1,5 @@
+![banner](assets/cloudscout_restapi.png)
+---
 # cloudscout-REST
 
 RESTful API for cloudscout, a quantitative college athlete analysis tool based on NCAA player statistics.
