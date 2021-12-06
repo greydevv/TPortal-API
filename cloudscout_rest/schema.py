@@ -9,7 +9,7 @@ FOOTBALL_SCHEMA = {
                 "properties": {
                     'class': {'type': ['number', 'null'], 'enum': [None,1,2,3,4,5]},
                     'conference': {'type': ['string', 'null']},
-                    'date': {'type': ['string', 'null'], 'pattern': '^[0-9]*$'}, # Unix time epoch (seconds since Jan 1, 1970)
+                    'date': {'type': ['number', 'null']}, # Unix time epoch (seconds since Jan 1, 1970)
                     'division': {'type': ['number', 'null'], 'enum': [None,1,2,3]},
                     'first': {'type': ['string', 'null']},
                     'institution': {'type': ['string', 'null']},
