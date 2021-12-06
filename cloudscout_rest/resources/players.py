@@ -1,9 +1,9 @@
 from flask import request, make_response
 from flask_restful import Resource
 import jsonschema
-from tportal_rest.ext import mongo
-from tportal_rest.exceptions import PlayerNotFoundError, DuplicateKeyError
-from tportal_rest.schema import FOOTBALL_SCHEMA
+from cloudscout_rest.ext import mongo
+from cloudscout_rest.exceptions import PlayerNotFoundError, DuplicateKeyError
+from cloudscout_rest.schema import FOOTBALL_SCHEMA
 
 def is_valid_json(json):
     try:

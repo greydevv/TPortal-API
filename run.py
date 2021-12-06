@@ -1,4 +1,4 @@
-from tportal_rest import create_app
+from cloudscout_rest import create_app
 
 app = create_app()
 

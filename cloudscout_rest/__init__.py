@@ -3,9 +3,9 @@ from flask import Flask
 from flask_restful import Api
 from flask_cors import CORS
 from dotenv import load_dotenv
-from tportal_rest.ext import mongo
-from tportal_rest.resources.players import Players, Player
-from tportal_rest.exceptions import ApiException
+from cloudscout_rest.ext import mongo
+from cloudscout_rest.resources.players import Players, Player
+from cloudscout_rest.exceptions import ApiException
 
 class TPortalREST(Api):
     def handle_error(self, e):
