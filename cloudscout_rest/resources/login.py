@@ -17,7 +17,6 @@ class Login(Resource):
         )
         if not login_obj: 
             raise UserNotRegisteredError
-            # return {'message': 'Email not registered'}
 
         login = login_obj['login']
         if not bcrypt.check_password_hash(login['password'], auth['password']):
