@@ -1,12 +1,95 @@
-FOOTBALL_SCHEMA = {
-    "type": "array",
-    "items": {
-        "type" : "object",
-        "properties" : {
-            "pid": {'type': 'string', 'pattern': '^[0-9]{10}$'},
-            "meta": {
-                "type": "object",
-                "properties": {
+class Patterns:
+    ID = r'^[0-9]{10}$'
+    EMAIL = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)'
+    YEAR_RANGE = r'^[0-9]{2}-[0-9]{2}$'
+
+class Sports:
+    FOOTBALL = 'FOOTBALL'
+    BASEBALL = 'BASEBALL'
+    MENS_BBALL = 'MENS_BASKETBALL'
+    WOMENS_BBALL = 'WOMENS_BASKETBALL'
+
+
+"""
+NEED TO AUTOPOPULATE THE PLAYER'S SPORT BECAUSE IT IS KNOWN
+WHICH PLAYER THEY ARE.
+"""
+
+IDS = {
+    'type': 'array',
+    'items': {
+        'type': 'string', 
+        'pattern': Patterns.ID,
+    },
+}
+
+USER_POST = {
+    'type': 'object',
+    'properties': {
+        'uid': {'type': 'string', 'pattern': Patterns.ID},
+        'meta': {
+            'type': 'object',
+            'properties': {
+                'first': {'type': 'string'},
+                'last': {'type': 'string'},
+                'school': {'type': 'string'},
+            },
+            'additionalProperties': False,
+            'required': [
+                'first',
+                'last',
+                'school',
+            ]
+        },
+        'login': {
+            'type': 'object',
+            'properties': {
+                'email': {'type': 'string', 'pattern': Patterns.EMAIL}, # probably have to modify this later
+                'password': {'type': 'string'} # use pattern to verify regex
+            },
+            'additionalProperties': False,
+            'required': [
+                'email',
+                'password',
+            ]
+        },
+        'account': {
+            'type': 'object',
+            'properties': {
+                'favorites': {
+                    # list of pids
+                    'type': 'array',
+                    'items': {
+                        'type': 'string',
+                        'pattern': Patterns.ID,
+                    },
+                    'additionalProperties': False,
+                },
+            },
+            'additionalProperties': False,
+            'required': [
+                'favorites',
+            ]
+        }
+
+    },
+    'additionalProperties': False,
+    'required': [
+        'uid',
+        'login',
+        'account',
+    ]
+}
+
+FOOTBALL = {
+    'type': 'array',
+    'items': {
+        'type' : 'object',
+        'properties' : {
+            'pid': {'type': 'string', 'pattern': Patterns.ID},
+            'meta': {
+                'type': 'object',
+                'properties': {
                     'class': {'type': ['number', 'null'], 'enum': [None,1,2,3,4,5]},
                     'conference': {'type': ['string', 'null']},
                     'date': {'type': ['number', 'null']}, # Unix time epoch (seconds since Jan 1, 1970)
@@ -16,28 +99,28 @@ FOOTBALL_SCHEMA = {
                     'last': {'type': ['string', 'null']},
                     'position': {'type': ['string', 'null'], 'enum': [None, 'QB', 'WR', 'OL', 'RB', 'TE', 'C', 'OT', 'FB', 'DL', 'DT', 'DE', 'LB', 'DB', 'CB', 'S', 'P', 'K', 'LS']},
                     # include gender?
-                    'sport': {'type': ['string', 'null'], 'enum': ['Football', "Men's Basketball", "Women's Basketball", 'Baseball']},
-                    'year': {'type': ['string', 'null'], 'pattern': '^[0-9]{2}-[0-9]{2}$'},
+                    'sport': {'type': ['string', 'null'], 'const': Sports.FOOTBALL},
+                    'year': {'type': ['string', 'null'], 'pattern': Patterns.YEAR_RANGE},
                 },
-                "additionalProperties": False,
-                "required": [
-                    "class",
-                    "conference",
-                    "date",
-                    "division",
-                    "first",
-                    "last",
-                    "position",
-                    "sport",
-                    "year",
+                'additionalProperties': False,
+                'required': [
+                    'class',
+                    'conference',
+                    'date',
+                    'division',
+                    'first',
+                    'last',
+                    'position',
+                    'sport',
+                    'year',
                 ],
             },
-            "stats": {
-                "type": "object",
-                "properties": {
-                    "general": {
-                        "type": "object",
-                        "properties": {
+            'stats': {
+                'type': 'object',
+                'properties': {
+                    'general': {
+                        'type': 'object',
+                        'properties': {
                             'all_purpose_plays': {'type': ['number', 'null']},
                             'all_purpose_yds': {'type': ['number', 'null']},
                             'all_purpose_yds_per_game': {'type': ['number', 'null']},
@@ -46,11 +129,11 @@ FOOTBALL_SCHEMA = {
                             'points': {'type': ['number', 'null']},
                             'touchdowns': {'type': ['number', 'null']},
                         },
-                        "additionalProperties": False,
+                        'additionalProperties': False,
                     },
-                    "offensive": {
-                        "type": "object",
-                        "properties": {
+                    'offensive': {
+                        'type': 'object',
+                        'properties': {
                             'completion_pct': {'type': ['number', 'null']},
                             'completions_per_game': {'type': ['number', 'null']},
                             'first_downs': {'type': ['number', 'null']},
@@ -98,11 +181,11 @@ FOOTBALL_SCHEMA = {
                             'yds_per_reception': {'type': ['number', 'null']},
                             'yds_per_rush': {'type': ['number', 'null']},
                         },
-                        "additionalProperties": False,
+                        'additionalProperties': False,
                     },
-                    "defensive": {
-                        "type": "object",
-                        "properties": {
+                    'defensive': {
+                        'type': 'object',
+                        'properties': {
                             'blocked': {'type': ['number', 'null']},
                             'fumbles_forced': {'type': ['number', 'null']},
                             'fumbles_recovered': {'type': ['number', 'null']},
@@ -128,11 +211,11 @@ FOOTBALL_SCHEMA = {
                             'tackles_for_loss_solo': {'type': ['number', 'null']},
                             'tackles_solo': {'type': ['number', 'null']},
                         },
-                        "additionalProperties": False,
+                        'additionalProperties': False,
                     },
-                    "special": {
-                        "type": "object",
-                        "properties": {
+                    'special': {
+                        'type': 'object',
+                        'properties': {
                             'fc_yds': {'type': ['number', 'null']},
                             'fga1_19': {'type': ['number', 'null']},
                             'fga20_29': {'type': ['number', 'null']},
@@ -182,23 +265,167 @@ FOOTBALL_SCHEMA = {
                             'rush_pat': {'type': ['number', 'null']},
                             'successful_onside_kicks': {'type': ['number', 'null']},
                         },
-                        "additionalProperties": False,
+                        'additionalProperties': False,
                     },
                 },
-                "additionalProperties": False,
-                "required": [
-                    "general",
-                    "offensive",
-                    "defensive",
-                    "special",
+                'additionalProperties': False,
+                'required': [
+                    'general',
+                    'offensive',
+                    'defensive',
+                    'special',
                 ],
             },
         },
-        "additionalProperties": False,
-        "required" : [
-            "meta",
-            "stats",
-            "pid",
+        'additionalProperties': False,
+        'required' : [
+            'meta',
+            'stats',
+            'pid',
+        ],
+    }
+}
+
+BASEBALL = {
+    'type': 'array',
+    'items': {
+        'type' : 'object',
+        'properties' : {
+            'pid': {'type': 'string', 'pattern': Patterns.ID},
+            'meta': {
+                'type': 'object',
+                'properties': {
+                    'class': {'type': ['number', 'null'], 'enum': [None,1,2,3,4,5]},
+                    'conference': {'type': ['string', 'null']},
+                    'date': {'type': ['number', 'null']}, # Unix time epoch (seconds since Jan 1, 1970)
+                    'division': {'type': ['number', 'null'], 'enum': [None,1,2,3]},
+                    'first': {'type': ['string', 'null']},
+                    'institution': {'type': ['string', 'null']},
+                    'last': {'type': ['string', 'null']},
+                    'position': {'type': ['string', 'null'], 'enum': [None,'P','DH','INF','OF','C','IF']},
+                    'sport': {'type': ['string', 'null'], 'const': Sports.BASEBALL},
+                    'year': {'type': ['string', 'null'], 'pattern': Patterns.YEAR_RANGE},
+                },
+                'additionalProperties': False,
+                'required': [
+                    'class',
+                    'conference',
+                    'date',
+                    'division',
+                    'first',
+                    'institution',
+                    'last',
+                    'position',
+                    'sport',
+                    'year',
+                ],
+            },
+            'stats': {
+                'type': 'object',
+                'properties': {
+                    'general': {
+                        'type': 'object',
+                        'properties': {
+                            'games_played': {'type': ['number', 'null']},
+                            'games_started': {'type': ['number', 'null']},
+                        },
+                        'additionalProperties': False,
+                    },
+                    'hitting': {
+                        'type': 'object',
+                        'properties': {
+                            'batting_average': {'type': ['number', 'null']},
+                            'on_base_percent': {'type': ['number', 'null']},
+                            'slugging_percent': {'type': ['number', 'null']},
+                            'runs': {'type': ['number', 'null']},
+                            'at_bats': {'type': ['number', 'null']},
+                            'hits': {'type': ['number', 'null']},
+                            'doubles': {'type': ['number', 'null']},
+                            'triples': {'type': ['number', 'null']},
+                            'total_bases': {'type': ['number', 'null']},
+                            'homeruns': {'type': ['number', 'null']},
+                            'runs_batted_in': {'type': ['number', 'null']},
+                            'walks': {'type': ['number', 'null']},
+                            'hit_by_pitch': {'type': ['number', 'null']},
+                            'sac_flys': {'type': ['number', 'null']},
+                            'sac_hits': {'type': ['number', 'null']},
+                            'strikeouts': {'type': ['number', 'null']},
+                            'opposing_double_plays': {'type': ['number', 'null']}, # WTF is this?
+                            'caught_stealing': {'type': ['number', 'null']},
+                            'picked': {'type': ['number', 'null']},
+                            'stolen_bases': {'type': ['number', 'null']},
+                            'intentional_walks': {'type': ['number', 'null']},
+                            'runs_batted_in_2_outs': {'type': ['number', 'null']},
+                            'receptions_per_game': {'type': ['number', 'null']},
+                        },
+                        'additionalProperties': False,
+                    },
+                    'pitching': {
+                        'type': 'object',
+                        'properties': {
+                            'appearances': {'type': ['number', 'null']},
+                            'games_saved': {'type': ['number', 'null']},
+                            'earned_runs': {'type': ['number', 'null']},
+                            'earned_runs_average': {'type': ['number', 'null']},
+                            'innings_pitched': {'type': ['number', 'null']},
+                            'complete_games': {'type': ['number', 'null']},
+                            'strikeouts': {'type': ['number', 'null']},
+                            'shutouts': {'type': ['number', 'null']},
+                            'batters_faced': {'type': ['number', 'null']},
+                            'official_at_bats': {'type': ['number', 'null']},
+                            'doubles_allowed': {'type': ['number', 'null']},
+                            'triples_allowd': {'type': ['number', 'null']},
+                            'balks': {'type': ['number', 'null']},
+                            'homeruns_allowed': {'type': ['number', 'null']},
+                            'wild_pitches': {'type': ['number', 'null']},
+                            'hit_batters': {'type': ['number', 'null']},
+                            'inherited_runs': {'type': ['number', 'null']},
+                            'inherited_runs_scored': {'type': ['number', 'null']},
+                            'sac_flys_allowed': {'type': ['number', 'null']},
+                            'sac_hits_allowed': {'type': ['number', 'null']},
+                            'pitches_thrown': {'type': ['number', 'null']},
+                            'groundouts': {'type': ['number', 'null']},
+                            'flyouts': {'type': ['number', 'null']},
+                            'wins': {'type': ['number', 'null']},
+                            'losses': {'type': ['number', 'null']},
+                            'saves': {'type': ['number', 'null']},
+                            'strikeouts_looking': {'type': ['number', 'null']},
+                            'pickoffs': {'type': ['number', 'null']},
+                        },
+                        'additionalProperties': False,
+                    },
+                    'fielding': {
+                        'type': 'object',
+                        'properties': {
+                            'putouts': {'type': ['number', 'null']},
+                            'assists': {'type': ['number', 'null']},
+                            'total_chances': {'type': ['number', 'null']},
+                            'error': {'type': ['number', 'null']},
+                            'fielding_percentage': {'type': ['number', 'null']},
+                            'catcher_interferences': {'type': ['number', 'null']},
+                            'passed_balls': {'type': ['number', 'null']},
+                            'steal_attempts': {'type': ['number', 'null']},
+                            'steals_caught': {'type': ['number', 'null']},
+                            'infield_double_plays': {'type': ['number', 'null']},
+                            'triple_plays': {'type': ['number', 'null']},
+                        },
+                        'additionalProperties': False,
+                    },
+                },
+                'additionalProperties': False,
+                'required': [
+                    'general',
+                    'hitting',
+                    'pitching',
+                    'fielding',
+                ],
+            },
+        },
+        'additionalProperties': False,
+        'required' : [
+            'meta',
+            'stats',
+            'pid',
         ],
     }
 }
