@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required
 from cloudscout_rest.ext import bcrypt, jwt, mongo
-from cloudscout_rest.exceptions import UserNotRegisteredError, InvalidLoginError, NoAuthSuppliedError
+from cloudscout_rest.exceptions import InvalidLoginError, NoAuthSuppliedError
 
 class Login(Resource):
     def post(self):
@@ -17,7 +17,8 @@ class Login(Resource):
             {'login.email': True, 'login.password': True, '_id': False}
         )
         if not login_obj: 
-            raise UserNotRegisteredError
+            # user is not found in db
+            raise InvalidLoginError
 
         login = login_obj['login']
         if not bcrypt.check_password_hash(login['password'], auth['password']):

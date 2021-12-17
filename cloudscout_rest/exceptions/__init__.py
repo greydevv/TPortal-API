@@ -47,13 +47,6 @@ class UserNotFoundError(ApiException):
 
 # LOGIN
 
-class UserNotRegisteredError(ApiException):
-    """
-    Raised when a user attempts to login with an email that does not exist in the database.
-    """
-    code = 404
-    msg = 'Email not registered'
-
 class InvalidLoginError(ApiException):
     """
     Raised when a user attmepts to login with invalid credentials.
