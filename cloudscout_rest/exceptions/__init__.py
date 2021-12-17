@@ -60,3 +60,10 @@ class InvalidLoginError(ApiException):
     """
     code = 401
     msg = 'Incorrect username or password'
+
+class NoAuthSuppliedError(ApiException):
+    """
+    Raised when a user attempts to login with no credentials.
+    """
+    code = 400
+    msg = 'Missing authorization header'
