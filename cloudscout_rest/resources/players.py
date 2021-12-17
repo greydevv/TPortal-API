@@ -51,7 +51,7 @@ class Players(Resource):
         pipeline = []
         if args.get('q'):
             query = args.get('q')
-            pipeline.append({'$search': {'text': {'query': query, 'path': {'wildcard': '*'}}}})
+            pipeline.append({'$search': {'text': {'query': query, 'fuzzy': {}, 'path': ['meta.first', 'meta.last', 'meta.institution']}}})
         if args.get('position'):
             pos = args['position']
             pipeline.append({'$match': {'meta.position': {'$regex': f'^{pos}$', '$options': 'i'}}})
@@ -62,7 +62,16 @@ class Players(Resource):
         if args.get('limit') and args.get('limit').isnumeric():
             pipeline.append({'$limit': int(args['limit'])})
         pipeline.append({'$project': {'_id': False}})
-        pipeline.append({'$sort': {'meta.date': 1}})
+        if not args.get('q'):
+            pipeline.append({'$sort': {'meta.date': 1}})
+        else:
+            pipeline.append({
+                '$sort': {
+                    'meta.institution': {'$meta': 'textScore'},
+                    'meta.last': {'$meta': 'textScore'},
+                    'meta.first': {'$meta': 'textScore'},
+                    '_id': 1,
+                }})
         return pipeline
 
     @staticmethod
