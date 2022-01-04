@@ -1,13 +1,13 @@
 from flask import request
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required
+# from flask_jwt_extended import jwt_required
 from cloudscout_rest.ext import bcrypt, mongo
 from cloudscout_rest.exceptions import DuplicateKeyError, UserNotFoundError
 from cloudscout_rest.schema import USER_POST
 from cloudscout_rest.common.validate_json import assertjson
 
 class Users(Resource):
-    @jwt_required()
+    # @jwt_required()
     @assertjson(USER_POST)
     def post(self):
         users = mongo.db.users
@@ -20,7 +20,7 @@ class Users(Resource):
         return uid, 200
 
 class User(Resource):
-    @jwt_required()
+    # @jwt_required()
     def get(self, uid):
         users = mongo.db.users
         data = users.find_one({'uid': uid}, {'_id': False})
@@ -28,7 +28,7 @@ class User(Resource):
             raise UserNotFoundError(data=uid)
         return data, 200
 
-    @jwt_required()
+    # @jwt_required()
     def delete(self, uid):
         users = mongo.db.users
         result = users.delete_one({'uid': uid})

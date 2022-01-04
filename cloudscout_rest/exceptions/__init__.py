@@ -15,6 +15,17 @@ class ApiException(Exception):
         return make_response(self.response, self.code)
 
 
+# AUTHORIZATION
+
+class AuthorizationError(ApiException):
+    """
+    Raised when authorization fails for a protected resource.
+    """
+    def __init__(self, code=401, msg='Unauthorized', **kwargs):
+        super().__init__(code=code, msg=msg, **kwargs)
+        self.code = code
+        self.msg = msg
+
 # PLAYERS
 
 class DuplicateKeyError(ApiException):

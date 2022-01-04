@@ -1,20 +1,21 @@
 from flask import request
 from flask_restful import Resource
-from flask_jwt_extended import jwt_required
+# from flask_jwt_extended import jwt_required
 from cloudscout_rest.ext import mongo
 from cloudscout_rest.exceptions import DuplicateKeyError, PlayerNotFoundError
 from cloudscout_rest.schema import FOOTBALL, IDS
 from cloudscout_rest.common.validate_json import assertjson
+from cloudscout_rest.common.auth_required import auth_required
 
 class Players(Resource):
-    @jwt_required()
+    @auth_required
     def get(self):
         players = mongo.db.players
         pipeline = self.__build_pipeline(request.args)
         data = list(players.aggregate(pipeline))
         return data, 200
     
-    @jwt_required()
+    @auth_required
     @assertjson(FOOTBALL)
     def put(self):
         players = mongo.db.players
@@ -29,7 +30,7 @@ class Players(Resource):
         ins_result = players.insert_many(request.json)
         return '', 204
 
-    @jwt_required()
+    @auth_required
     @assertjson(FOOTBALL)
     def post(self):
         players = mongo.db.players
@@ -39,7 +40,7 @@ class Players(Resource):
         ins_result = players.insert_many(request.json)
         return [e['pid'] for e in request.json], 200
 
-    @jwt_required()
+    @auth_required
     @assertjson(IDS)
     def delete(self):
         players = mongo.db.players
@@ -87,7 +88,7 @@ class Players(Resource):
         return dup_pids
 
 class Player(Resource):
-    @jwt_required()
+    @auth_required
     def get(self, pid):
         players = mongo.db.players
         data = players.find_one({'pid': pid}, {'_id': False})
@@ -95,7 +96,7 @@ class Player(Resource):
             raise PlayerNotFoundError(data=pid)
         return data, 200
 
-    @jwt_required()
+    @auth_required
     def delete(self, pid):
         players = mongo.db.players
         result = players.delete_one({'pid': pid})
