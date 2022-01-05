@@ -47,6 +47,14 @@ def auth_required(func):
         jwks = response.json()
         unverified_header = jwt.get_unverified_header(token)
         rsa_key = {}
+
+        # DEBUG PRINT
+        from pprint import pprint
+        print('\n')
+        pprint(unverified_header)
+        print('\n')
+        # END DEBUG PRINT
+
         for key in jwks['keys']:
             if key['kid'] == unverified_header['kid']:
                 rsa_key = {
