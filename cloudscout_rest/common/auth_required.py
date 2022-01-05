@@ -37,8 +37,9 @@ def auth_required(func):
     @wraps(func)
     def decorated(*args, **kwargs):
         ALGORITHMS=['RS256']
-        # get_or_raise in 'create_app' ensures these variables are not None
-        AUTH0_AUDIENCE=os.getenv('AUTH0_AUDIENCE')
+        API_AUDIENCE=os.getenv('AUTH0_AUDIENCE')
+        # get_or_raise in 'create_app' throws error before this code is run
+        # if env variables do not exist
         AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
         token = get_token_auth_header()
         # need to do any checking if response code is 200?
@@ -46,10 +47,6 @@ def auth_required(func):
         jwks = response.json()
         unverified_header = jwt.get_unverified_header(token)
         rsa_key = {}
-        from pprint import pprint
-        print('\n')
-        pprint(unverified_header);
-        print('\n')
         for key in jwks['keys']:
             if key['kid'] == unverified_header['kid']:
                 rsa_key = {
@@ -65,7 +62,7 @@ def auth_required(func):
                     token,
                     rsa_key,
                     algorithms=ALGORITHMS,
-                    audience=f'https://{AUTH0_AUDIENCE}/',
+                    audience=API_AUDIENCE,
                     issuer=f'https://{AUTH0_DOMAIN}/'
                 )
             except jwt.ExpiredSignatureError:
