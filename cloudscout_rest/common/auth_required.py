@@ -83,8 +83,6 @@ def auth_required(func):
                 print('\n\n')
                 print(claims_e)
                 print('\n\n')
-                print(payload)
-                print('\n\n')
                 raise AuthorizationError(
                     400,
                     'Invalid claims, please check the audience and issuer'
