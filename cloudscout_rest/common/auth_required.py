@@ -37,9 +37,8 @@ def auth_required(func):
     @wraps(func)
     def decorated(*args, **kwargs):
         ALGORITHMS=['RS256']
-        API_AUDIENCE=os.getenv('AUTH0_AUDIENCE')
-        # get_or_raise in 'create_app' throws error before this code is run
-        # if env variables do not exist
+        # get_or_raise in 'create_app' ensures these variables are not None
+        AUTH0_AUDIENCE=os.getenv('AUTH0_AUDIENCE')
         AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
         token = get_token_auth_header()
         # need to do any checking if response code is 200?
@@ -66,7 +65,7 @@ def auth_required(func):
                     token,
                     rsa_key,
                     algorithms=ALGORITHMS,
-                    audience=API_AUDIENCE,
+                    audience=f'https://{AUTH0_AUDIENCE}/',
                     issuer=f'https://{AUTH0_DOMAIN}/'
                 )
             except jwt.ExpiredSignatureError:
