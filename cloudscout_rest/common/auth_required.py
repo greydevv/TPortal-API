@@ -78,8 +78,13 @@ def auth_required(func):
                     401, 
                     'Token expired'
                 )
-            except jwt.JWTClaimsError:
+            except jwt.JWTClaimsError as claims_e:
                 # is this the correct code to use (400: bad request)?
+                print('\n\n')
+                print(claims_e)
+                print('\n\n')
+                print(payload)
+                print('\n\n')
                 raise AuthorizationError(
                     400,
                     'Invalid claims, please check the audience and issuer'
