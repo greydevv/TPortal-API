@@ -37,7 +37,7 @@ def auth_required(func):
     @wraps(func)
     def decorated(*args, **kwargs):
         ALGORITHMS=['RS256']
-        API_AUDIENCE=os.getenv('AUTH0_AUDIENCE')
+        AUTH0_AUDIENCE=os.getenv('AUTH0_AUDIENCE')
         # get_or_raise in 'create_app' throws error before this code is run
         # if env variables do not exist
         AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
@@ -70,7 +70,7 @@ def auth_required(func):
                     token,
                     rsa_key,
                     algorithms=ALGORITHMS,
-                    audience=API_AUDIENCE,
+                    audience=AUTH0_AUDIENCE,
                     issuer=f'https://{AUTH0_DOMAIN}/'
                 )
             except jwt.ExpiredSignatureError:
