@@ -54,20 +54,3 @@ class UserNotFoundError(ApiException):
     """
     code = 404
     msg = 'Could not find the user with the specified pid'
-
-
-# LOGIN
-
-class InvalidLoginError(ApiException):
-    """
-    Raised when a user attmepts to login with invalid credentials.
-    """
-    code = 401
-    msg = 'Incorrect username or password'
-
-class NoAuthSuppliedError(ApiException):
-    """
-    Raised when a user attempts to login with no credentials.
-    """
-    code = 400
-    msg = 'Missing authorization header'

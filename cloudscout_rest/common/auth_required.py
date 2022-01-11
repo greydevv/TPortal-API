@@ -80,10 +80,6 @@ def auth_required(func):
                 )
             except jwt.JWTClaimsError as claims_e:
                 # is this the correct code to use (400: bad request)?
-                print('\n\n')
-                print(claims_e)
-                print(AUTH0_AUDIENCE)
-                print('\n\n')
                 raise AuthorizationError(
                     400,
                     'Invalid claims, please check the audience and issuer'
