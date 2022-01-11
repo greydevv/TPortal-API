@@ -1,8 +1,7 @@
 ![banner](assets/banner.png)
 
-RESTful API for **[cloudscout](https://www.cloudscout.app)**
+# Endpoints
 
----
 ## /v1/players
 
 
