@@ -1,6 +1,6 @@
 ![banner](assets/banner.png)
 
-RESTful API for *cloudscout*, a tool for quantitative analysis of collegiate athletes eligible for recruitment.
+RESTful API for **[cloudscout](https://www.cloudscout.app)**
 
 ---
 ## /v1/players
