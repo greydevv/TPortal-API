@@ -82,6 +82,7 @@ def auth_required(func):
                 # is this the correct code to use (400: bad request)?
                 print('\n\n')
                 print(claims_e)
+                print(AUTH0_AUDIENCE)
                 print('\n\n')
                 raise AuthorizationError(
                     400,
