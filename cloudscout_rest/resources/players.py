@@ -54,12 +54,11 @@ class Players(Resource):
             query = args.get('q')
             pipeline.append({'$search': {'text': {'query': query, 'fuzzy': {}, 'path': ['meta.first', 'meta.last', 'meta.institution']}}})
         if args.get('position'):
-            pos = args['position']
-            pipeline.append({'$match': {'meta.position': {'$regex': f'^{pos}$', '$options': 'i'}}})
+            pipeline.append({'$match': {'meta.position': {'$in': [f'^{arg.upper()}$' for arg in args['position'].split(',')]}}})
         if args.get('division'):
-            pipeline.append({'$match': {'meta.division': int(args['division'])}})
+            pipeline.append({'$match': {'meta.division': {'$in': [int(arg) for arg in args['division'].split(',')]}}})
         if args.get('year'):
-            pipeline.append({'$match': {'meta.year': int(args['year'])}})
+            pipeline.append({'$match': {'meta.year': {'$in' [int(arg) for arg in args['year'].split(',')]}}})
         if args.get('limit') and args.get('limit').isnumeric():
             pipeline.append({'$limit': int(args['limit'])})
         pipeline.append({'$project': {'_id': False}})
