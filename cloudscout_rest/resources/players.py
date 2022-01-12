@@ -58,7 +58,7 @@ class Players(Resource):
         if args.get('division'):
             pipeline.append({'$match': {'meta.division': {'$in': [int(arg) for arg in args['division'].split(',')]}}})
         if args.get('year'):
-            pipeline.append({'$match': {'meta.year': {'$in' [int(arg) for arg in args['year'].split(',')]}}})
+            pipeline.append({'$match': {'meta.year': {'$in': [int(arg) for arg in args['year'].split(',')]}}})
         if args.get('limit') and args.get('limit').isnumeric():
             pipeline.append({'$limit': int(args['limit'])})
         pipeline.append({'$project': {'_id': False}})
