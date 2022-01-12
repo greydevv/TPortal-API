@@ -64,7 +64,7 @@ class Players(Resource):
             pipeline.append({'$limit': int(args['limit'])})
         pipeline.append({'$project': {'_id': False}})
         if not args.get('q'):
-            pipeline.append({'$sort': {'meta.date': 1}})
+            pipeline.append({'$sort': {'meta.date': -1}})
         else:
             pipeline.append({
                 '$sort': {
