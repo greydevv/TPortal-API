@@ -36,25 +36,13 @@ def get_token_auth_header():
 def auth_required(func):
     @wraps(func)
     def decorated(*args, **kwargs):
-        ALGORITHMS=['RS256']
-        AUTH0_AUDIENCE=os.getenv('AUTH0_AUDIENCE')
-        # get_or_raise in 'create_app' throws error before this code is run
-        # if env variables do not exist
+        AUTH0_AUDIENCE = os.getenv('AUTH0_AUDIENCE')
         AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
+
         token = get_token_auth_header()
-        # need to do any checking if response code is 200?
-        response = requests.get(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
-        jwks = response.json()
+        jwks = requests.get(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json').json()
         unverified_header = jwt.get_unverified_header(token)
         rsa_key = {}
-
-        # DEBUG PRINT
-        from pprint import pprint
-        print('\n')
-        pprint(unverified_header)
-        print('\n')
-        # END DEBUG PRINT
-
         for key in jwks['keys']:
             if key['kid'] == unverified_header['kid']:
                 rsa_key = {
@@ -69,7 +57,7 @@ def auth_required(func):
                 payload = jwt.decode(
                     token,
                     rsa_key,
-                    algorithms=ALGORITHMS,
+                    algorithms=['RS256'],
                     audience=AUTH0_AUDIENCE,
                     issuer=f'https://{AUTH0_DOMAIN}/'
                 )
@@ -78,14 +66,12 @@ def auth_required(func):
                     401, 
                     'Token expired'
                 )
-            except jwt.JWTClaimsError as claims_e:
-                # is this the correct code to use (400: bad request)?
+            except jwt.JWTClaimsError:
                 raise AuthorizationError(
                     400,
                     'Invalid claims, please check the audience and issuer'
                 )
             except Exception:
-                # is this the correct code to use (400: bad request)?
                 raise AuthorizationError(
                     400,
                     'Unable to parse authentication token'
