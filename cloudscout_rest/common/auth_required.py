@@ -6,9 +6,9 @@ from jose import jwt
 from cloudscout_rest.exceptions import AuthorizationError
 
 def get_token_auth_header():
-    '''
-    Obtains the Access Token from the Authorization Header
-    '''
+    """
+    Extracts the access token from the authorization header.
+    """
     auth = request.headers.get('Authorization', None)
     if not auth:
         raise AuthorizationError(
@@ -30,10 +30,13 @@ def get_token_auth_header():
         )
 
     token = parts[1]
-    print(token)
     return token
 
 def auth_required(func):
+    """
+    A decorator for protecting resources that can only be accessed via an access 
+    token in the authorization header.
+    """
     @wraps(func)
     def decorated(*args, **kwargs):
         AUTH0_AUDIENCE = os.getenv('AUTH0_AUDIENCE')
