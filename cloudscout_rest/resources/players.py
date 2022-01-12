@@ -54,7 +54,7 @@ class Players(Resource):
             query = args.get('q')
             pipeline.append({'$search': {'text': {'query': query, 'fuzzy': {}, 'path': ['meta.first', 'meta.last', 'meta.institution']}}})
         if args.get('position'):
-            pipeline.append({'$match': {'meta.position': {'$in': [f'^{arg.upper()}$' for arg in args['position'].split(',')]}}})
+            pipeline.append({'$match': {'meta.position': {'$in': [arg.upper() for arg in args['position'].split(',')]}}})
         if args.get('division'):
             pipeline.append({'$match': {'meta.division': {'$in': [int(arg) for arg in args['division'].split(',')]}}})
         if args.get('year'):
