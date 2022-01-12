@@ -63,7 +63,7 @@ def auth_required(func):
                 )
             except jwt.ExpiredSignatureError:
                 raise AuthorizationError(
-                    401, 
+                    400, 
                     'Token expired'
                 )
             except jwt.JWTClaimsError:
