@@ -9,16 +9,17 @@ from cloudscout_rest.resources.players import Players, Player
 from cloudscout_rest.resources.users import Users, User
 from cloudscout_rest.exceptions import ApiException
 
-class TPortalREST(Api):
+class CloudscoutApi(Api):
     """
     A subclass of the flask_restful 'Api' object for custom behavior.
     """
     def handle_error(self, e):
+        # handle custom errors
         if isinstance(e, ApiException):
             return e.get_response()
         return super().handle_error(e)
 
-def get_or_raise(key):
+def get_env_or_raise(key):
     value = os.getenv(key)
     if not value:
         raise ValueError(f'No {key} specified.')
@@ -29,12 +30,14 @@ def create_app():
     app = Flask(__name__)
     CORS(app)
 
-    app.config['MONGO_URI'] = get_or_raise('MONGO_URI')
-    get_or_raise('AUTH0_DOMAIN')
-    get_or_raise('AUTH0_AUDIENCE')
+    # raise ValueError if required environment variables are not present
+    app.config['MONGO_URI'] = get_env_or_raise('MONGO_URI')
+    get_env_or_raise('AUTH0_DOMAIN')
+    get_env_or_raise('AUTH0_AUDIENCE')
+    
     mongo.init_app(app)
 
-    api = TPortalREST(app)
+    api = CloudscoutApi(app)
     api.add_resource(Players, '/v1/players')
     api.add_resource(Player, '/v1/players/<string:pid>')
 
