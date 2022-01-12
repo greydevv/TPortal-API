@@ -10,6 +10,9 @@ from cloudscout_rest.resources.users import Users, User
 from cloudscout_rest.exceptions import ApiException
 
 class TPortalREST(Api):
+    """
+    A subclass of the flask_restful 'Api' object for custom behavior.
+    """
     def handle_error(self, e):
         if isinstance(e, ApiException):
             return e.get_response()
