@@ -42,5 +42,5 @@ def create_app():
     api.add_resource(Player, '/v1/players/<string:pid>')
 
     api.add_resource(Users, '/v1/users')
-    api.add_resource(User, '/v1/users/<string:pid>')
+    api.add_resource(User, '/v1/users/<string:uid>')
     return app
