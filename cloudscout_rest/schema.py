@@ -32,13 +32,13 @@ USER = {
             'properties': {
                 'first': {'type': 'string'},
                 'last': {'type': 'string'},
-                'school': {'type': 'string'},
+                'institution': {'type': 'string'},
             },
             'additionalProperties': False,
             'required': [
                 'first',
                 'last',
-                'school',
+                'institution',
             ]
         },
         'account': {
