@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource
 # from flask_jwt_extended import jwt_required
 from cloudscout_rest.ext import mongo
-from cloudscout_rest.exceptions import DuplicateKeyError, PlayerNotFoundError
+from cloudscout_rest.exceptions import DuplicateKeyError, ResourceNotFoundError
 from cloudscout_rest.schema import FOOTBALL, IDS
 from cloudscout_rest.common.validate_json import assertjson
 from cloudscout_rest.common.auth_required import auth_required
@@ -22,7 +22,7 @@ class Players(Resource):
         pids = [e['pid'] for e in request.json]
         for pid in pids:
             if not players.find_one({'pid': pid}, {'_id': False}):
-                raise PlayerNotFoundError(data=pid)
+                raise ResourceNotFoundError(data=pid)
         players.delete_many({'pid': {'$in':pids}})
         ins_result = players.insert_many(request.json)
         return '', 204
@@ -58,6 +58,8 @@ class Players(Resource):
             pipeline.append({'$match': {'meta.year': {'$in': [int(arg) for arg in args['year'].split(',')]}}})
         if args.get('limit') and args.get('limit').isnumeric():
             pipeline.append({'$limit': int(args['limit'])})
+        if args.get('pids'):
+            pipeline.append({'$match': {'pid': {'$in': [arg for arg in args['pids'].split(',')]}}})
         pipeline.append({'$project': {'_id': False}})
         if not args.get('q'):
             pipeline.append({'$sort': {'meta.date': -1}})
@@ -90,7 +92,7 @@ class Player(Resource):
         players = mongo.db.players
         data = players.find_one({'pid': pid}, {'_id': False})
         if not data:
-            raise PlayerNotFoundError(data=pid)
+            raise ResourceNotFoundError(data=pid)
         return data, 200
 
     @auth_required
