@@ -1,4 +1,4 @@
-from flask import jsonify, make_response, Response
+from flask import make_response, Response
 from typing import List, Any
 
 class ApiException(Exception):

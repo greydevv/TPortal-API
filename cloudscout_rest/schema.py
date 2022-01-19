@@ -1,4 +1,5 @@
 class Patterns:
+    USER_ID = r'^[0-9a-z]+$'
     ID = r'^[0-9]{10}$'
     EMAIL = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)'
     YEAR_RANGE = r'^[0-9]{2}-[0-9]{2}$'
@@ -8,7 +9,6 @@ class Sports:
     BASEBALL = 'BASEBALL'
     MENS_BBALL = 'MENS_BASKETBALL'
     WOMENS_BBALL = 'WOMENS_BASKETBALL'
-
 
 """
 NEED TO AUTOPOPULATE THE PLAYER'S SPORT BECAUSE IT IS KNOWN
@@ -20,13 +20,13 @@ IDS = {
     'items': {
         'type': 'string', 
         'pattern': Patterns.ID,
-    },
+    }
 }
 
-USER_POST = {
+USER = {
     'type': 'object',
     'properties': {
-        'uid': {'type': 'string', 'pattern': Patterns.ID},
+        'uid': {'type': 'string', 'pattern': Patterns.USER_ID},
         'meta': {
             'type': 'object',
             'properties': {
@@ -41,42 +41,19 @@ USER_POST = {
                 'school',
             ]
         },
-        'login': {
-            'type': 'object',
-            'properties': {
-                'email': {'type': 'string', 'pattern': Patterns.EMAIL}, # probably have to modify this later
-                'password': {'type': 'string'} # use pattern to verify regex
-            },
-            'additionalProperties': False,
-            'required': [
-                'email',
-                'password',
-            ]
-        },
         'account': {
             'type': 'object',
             'properties': {
-                'favorites': {
-                    # list of pids
-                    'type': 'array',
-                    'items': {
-                        'type': 'string',
-                        'pattern': Patterns.ID,
-                    },
-                    'additionalProperties': False,
-                },
+                'favorites': IDS,
             },
             'additionalProperties': False,
-            'required': [
-                'favorites',
-            ]
+            'required': ['favorites']
         }
-
     },
     'additionalProperties': False,
     'required': [
         'uid',
-        'login',
+        'meta',
         'account',
     ]
 }

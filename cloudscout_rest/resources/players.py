@@ -19,9 +19,6 @@ class Players(Resource):
     @assertjson(FOOTBALL)
     def put(self):
         players = mongo.db.players
-        if not request.json:
-            return '', 204
-        players = mongo.db.players
         pids = [e['pid'] for e in request.json]
         for pid in pids:
             if not players.find_one({'pid': pid}, {'_id': False}):
@@ -38,7 +35,7 @@ class Players(Resource):
         if dup_pids:
             raise DuplicateKeyError(data=dup_pids)
         ins_result = players.insert_many(request.json)
-        return [e['pid'] for e in request.json], 200
+        return '', 204
 
     @auth_required
     @assertjson(IDS)
@@ -70,6 +67,7 @@ class Players(Resource):
                     'meta.institution': {'$meta': 'textScore'},
                     'meta.last': {'$meta': 'textScore'},
                     'meta.first': {'$meta': 'textScore'},
+                    # SHOULDN'T I BE SORTING BY DATE?
                     '_id': 1,
                 }})
         return pipeline
