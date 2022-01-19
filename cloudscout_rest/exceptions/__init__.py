@@ -26,31 +26,19 @@ class AuthorizationError(ApiException):
         self.code = code
         self.msg = msg
 
-# PLAYERS
-
 class DuplicateKeyError(ApiException):
     """
     Raised when an insertion POST request is made with an element that would
     create a duplicate key entry if it were to be entered into the database.
     """
     code = 409
-    msg = 'Could not add players to database as doing so would cause duplicate entries'
+    msg = 'Could not add element to database as doing so would cause duplicate entries'
 
-class PlayerNotFoundError(ApiException):
+class ResourceNotFoundError(ApiException):
     """
-    Raised when a query for a player (by pid) is made, but the player does not 
-    exist in the database.
-    """
-    code = 404
-    msg = 'Could not find the player with the specified pid'
-
-
-# USERS
-
-class UserNotFoundError(ApiException):
-    """
-    Raised when a query for a user (by uid) is made, but the uid does not 
-    exist in the database.
+    Raised when a requested resource is not found in the database. This is
+    usually determined by means of a primary key such as the 'pid' or 'uid'
+    properties.
     """
     code = 404
-    msg = 'Could not find the user with the specified pid'
+    msg = 'Resource does not exist in the database'
