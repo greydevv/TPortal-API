@@ -54,21 +54,21 @@ USER = {
                         'division': {
                             'type': 'array',
                             'items': {
-                                'type': 'string',
+                                'type': ['number', 'null'],
                                 'enum': [None,1,2,3]
                             }
                         },
                         'class': {
                             'type': 'array',
                             'items': {
-                                'type': 'string',
+                                'type': ['number', 'null'],
                                 'enum': [None,1,2,3,4,5]
                             }
                         },
                         'position': {
                             'type': 'array',
                             'items': {
-                                'type': 'string',
+                                'type': ['string', 'null'],
                                 'enum': Positions.FOOTBALL
                             }
                         }
