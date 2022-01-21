@@ -10,6 +10,9 @@ class Sports:
     MENS_BBALL = 'MENS_BASKETBALL'
     WOMENS_BBALL = 'WOMENS_BASKETBALL'
 
+class Positions:
+    FOOTBALL = [None, 'QB', 'WR', 'OL', 'RB', 'TE', 'C', 'OT', 'FB', 'DL', 'DT', 'DE', 'LB', 'DB', 'CB', 'S', 'P', 'K', 'LS']
+
 """
 NEED TO AUTOPOPULATE THE PLAYER'S SPORT BECAUSE IT IS KNOWN
 WHICH PLAYER THEY ARE.
@@ -45,10 +48,45 @@ USER = {
             'type': 'object',
             'properties': {
                 'favorites': IDS,
+                'default_filters': {
+                    'type': 'object',
+                    'properties': {
+                        'division': {
+                            'type': 'array',
+                            'items': {
+                                'type': 'string',
+                                'enum': [None,1,2,3]
+                            }
+                        },
+                        'class': {
+                            'type': 'array',
+                            'items': {
+                                'type': 'string',
+                                'enum': [None,1,2,3,4,5]
+                            }
+                        },
+                        'position': {
+                            'type': 'array',
+                            'items': {
+                                'type': 'string',
+                                'enum': Positions.FOOTBALL
+                            }
+                        }
+                    },
+                    'additionalProperties': False,
+                    'required': [
+                        'division',
+                        'class',
+                        'position'
+                    ]
+                }
             },
             'additionalProperties': False,
-            'required': ['favorites']
-        }
+            'required': [
+                'favorites',
+                'default_filters'
+            ]
+        },
     },
     'additionalProperties': False,
     'required': [
@@ -74,7 +112,7 @@ FOOTBALL = {
                     'first': {'type': ['string', 'null']},
                     'institution': {'type': ['string', 'null']},
                     'last': {'type': ['string', 'null']},
-                    'position': {'type': ['string', 'null'], 'enum': [None, 'QB', 'WR', 'OL', 'RB', 'TE', 'C', 'OT', 'FB', 'DL', 'DT', 'DE', 'LB', 'DB', 'CB', 'S', 'P', 'K', 'LS']},
+                    'position': {'type': ['string', 'null'], 'enum': Positions.FOOTBALL},
                     # include gender?
                     'sport': {'type': ['string', 'null'], 'const': Sports.FOOTBALL},
                     'year': {'type': ['string', 'null'], 'pattern': Patterns.YEAR_RANGE},
