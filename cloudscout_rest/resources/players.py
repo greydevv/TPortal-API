@@ -25,7 +25,7 @@ class Players(Resource):
                 raise ResourceNotFoundError(data=pid)
         players.delete_many({'pid': {'$in':pids}})
         ins_result = players.insert_many(request.json)
-        return '', 204
+        return {}, 200
 
     @auth_required
     @assertjson(FOOTBALL)
@@ -35,14 +35,14 @@ class Players(Resource):
         if dup_pids:
             raise DuplicateKeyError(data=dup_pids)
         ins_result = players.insert_many(request.json)
-        return '', 204
+        return {}, 200
 
     @auth_required
     @assertjson(IDS)
     def delete(self):
         players = mongo.db.players
         result = players.delete_many({'pid': {'$in': request.json}})
-        return '', 204
+        return {}, 200
 
     @staticmethod
     def __build_pipeline(args):
@@ -101,4 +101,4 @@ class Player(Resource):
         result = players.delete_one({'pid': pid})
         if result.deleted_count == 0:
             raise PlayerNotFoundError(data=pid)
-        return '', 204
+        return {}, 200

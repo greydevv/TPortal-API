@@ -15,7 +15,7 @@ class Users(Resource):
         if users.find_one({'uid': uid}, {'_id': False}):
             raise DuplicateKeyError(data=uid)
         users.insert_one(request.json)
-        return '', 204
+        return {}, 200
 
 class User(Resource):
     @auth_required
@@ -38,7 +38,7 @@ class User(Resource):
         if request.json['uid'] != uid and users.find_one({'uid': request.json['uid']}) is not None:
             raise DuplicateKeyError(data=uid)
         result = users.replace_one({'uid': uid}, request.json)
-        return None, 204
+        return {}, 200
 
     @auth_required
     def delete(self, uid):
@@ -46,4 +46,4 @@ class User(Resource):
         result = users.delete_one({'uid': uid})
         if result.deleted_count == 0:
             raise ResourceNotFoundError(data=uid)
-        return '', 204
+        return {}, 200
