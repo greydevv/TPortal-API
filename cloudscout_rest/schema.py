@@ -13,10 +13,19 @@ class Sports:
 class Positions:
     FOOTBALL = [None, 'QB', 'WR', 'OL', 'RB', 'TE', 'C', 'OT', 'FB', 'DL', 'DT', 'DE', 'LB', 'DB', 'CB', 'S', 'P', 'K', 'LS']
 
-"""
-NEED TO AUTOPOPULATE THE PLAYER'S SPORT BECAUSE IT IS KNOWN
-WHICH PLAYER THEY ARE.
-"""
+def make_array(schema):
+    return {
+        'type': 'array',
+        'items': schema
+    }
+
+def get_stat_categories(schema):
+    stats = schema['properties']['stats']
+    categories = stats['required']
+    fields = {}
+    for category in categories:
+        fields[category] = list(stats['properties'][category]['properties'].keys())
+    return fields
 
 IDS = {
     'type': 'array',
@@ -95,13 +104,6 @@ USER = {
         'account',
     ]
 }
-
-def make_array(schema):
-    return {
-        'type': 'array',
-        'items': schema
-    }
-
 FOOTBALL = {
     'type' : 'object',
     'properties' : {

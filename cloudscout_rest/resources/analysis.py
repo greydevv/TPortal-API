@@ -2,34 +2,47 @@ from flask import request
 from flask_restful import Resource
 from cloudscout_rest.ext import mongo
 from cloudscout_rest.common.auth_required import auth_required
-from cloudscout_rest.schema import FOOTBALL
+from cloudscout_rest.schema import FOOTBALL, get_stat_categories
 
-def get_avg_aggregation(category, fields):
-    agg = {'_id': None}
-    for field in fields:
+def get_avg_aggregation(schema, category):
+    agg = {'_id': '$meta.position'}
+    categories = get_stat_categories(schema)
+    for field in categories[category]:
         agg[field] = {'$avg': f'$stats.{category}.{field}'}
     return agg
-
-def get_stat_fields(schema):
-    return schema['properties']['stats']['required']
-
-def get_category_stats(category, schema):
-    return list(schema['properties']['stats']['properties'][category]['properties'].keys())
 
 class Analysis(Resource):
     @auth_required
     def get(self):
         players = mongo.db.players
-        result = {}
         schema = FOOTBALL
-        for category in get_stat_fields(schema):
-            agg_result = players.aggregate([
+        position = request.args.get('position')
+        result = {}
+        for category in get_stat_categories(schema):
+            pipeline = []
+            if position is not None:
+                pipeline.append({
+                    '$match': {
+                        'meta.position': request.args.get('position')
+                    }
+                })
+
+            # add { '$addFields': { 'position': '$_id' } } to include position
+            # in response
+            pipeline.extend([
                 {
-                    '$group': get_avg_aggregation(
-                        category, 
-                        get_category_stats(category, schema)
-                    )
-                }
+                    '$group': get_avg_aggregation(schema, category), 
+                },
+                {
+                    '$project': {
+                        '_id': False,
+                    }
+                },
             ])
-            result[category] = list(agg_result)
+            agg_result = list(players.aggregate(pipeline))
+            if request.args.get('position'):
+                # returns list with one arg
+                result[category] = agg_result[0]
+            else:
+                result[category] = agg_result
         return result, 200
