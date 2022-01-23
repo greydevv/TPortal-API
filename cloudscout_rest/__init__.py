@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from cloudscout_rest.ext import mongo
 from cloudscout_rest.resources.players import Players, Player
 from cloudscout_rest.resources.users import Users, User
+from cloudscout_rest.resources.analysis import Analysis
 from cloudscout_rest.exceptions import ApiException
 
 class CloudscoutApi(Api):
@@ -43,4 +44,6 @@ def create_app():
 
     api.add_resource(Users, '/v1/users')
     api.add_resource(User, '/v1/users/<string:uid>')
+
+    api.add_resource(Analysis, '/v1/analysis')
     return app

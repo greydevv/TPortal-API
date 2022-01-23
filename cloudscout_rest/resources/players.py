@@ -3,7 +3,7 @@ from flask_restful import Resource
 # from flask_jwt_extended import jwt_required
 from cloudscout_rest.ext import mongo
 from cloudscout_rest.exceptions import DuplicateKeyError, ResourceNotFoundError
-from cloudscout_rest.schema import FOOTBALL, IDS
+from cloudscout_rest.schema import make_array, FOOTBALL, IDS
 from cloudscout_rest.common.validate_json import assertjson
 from cloudscout_rest.common.auth_required import auth_required
 
@@ -16,7 +16,7 @@ class Players(Resource):
         return data, 200
     
     @auth_required
-    @assertjson(FOOTBALL)
+    @assertjson(make_array(FOOTBALL))
     def put(self):
         players = mongo.db.players
         pids = [e['pid'] for e in request.json]
@@ -28,7 +28,7 @@ class Players(Resource):
         return {}, 200
 
     @auth_required
-    @assertjson(FOOTBALL)
+    @assertjson(make_array(FOOTBALL))
     def post(self):
         players = mongo.db.players
         dup_pids = self.__get_dup_pids(request.json)
