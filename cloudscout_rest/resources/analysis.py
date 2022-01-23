@@ -17,6 +17,7 @@ def get_category_stats(category, schema):
     return list(schema['properties']['stats']['properties'][category]['properties'].keys())
 
 class Analysis(Resource):
+    @auth_required
     def get(self):
         players = mongo.db.players
         result = {}
