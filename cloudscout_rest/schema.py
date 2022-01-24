@@ -19,13 +19,12 @@ def make_array(schema):
         'items': schema
     }
 
-def get_stat_categories(schema):
-    stats = schema['properties']['stats']
-    categories = stats['required']
-    fields = {}
-    for category in categories:
-        fields[category] = list(stats['properties'][category]['properties'].keys())
-    return fields
+def get_stat_mapping(schema):
+    stats = schema['properties']['stats']['properties']
+    stat_map = {}
+    for category in stats.keys():
+        stat_map[category] = list(stats[category]['properties'].keys())
+    return stat_map
 
 IDS = {
     'type': 'array',
@@ -305,6 +304,7 @@ FOOTBALL = {
         'pid',
     ],
 }
+
 
 BASEBALL = {
     'type': 'array',

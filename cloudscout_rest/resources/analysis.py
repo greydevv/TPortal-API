@@ -2,14 +2,24 @@ from flask import request
 from flask_restful import Resource
 from cloudscout_rest.ext import mongo
 from cloudscout_rest.common.auth_required import auth_required
-from cloudscout_rest.schema import FOOTBALL, get_stat_categories
+from cloudscout_rest.schema import FOOTBALL, get_stat_mapping
 
-def get_avg_aggregation(schema, category):
-    agg = {'_id': '$meta.position'}
-    categories = get_stat_categories(schema)
-    for field in categories[category]:
-        agg[field] = {'$avg': f'$stats.{category}.{field}'}
-    return agg
+def build_group_aggregation(schema):
+    stat_mapping = get_stat_mapping(schema)
+    grouping = {'_id': '$meta.position'}
+    projection = {'_id': False, 'position': '$_id'}
+    for category,stats in stat_mapping.items():
+        sub_proj = {}
+        for stat in stats:
+            group_stat = f'{category}-{stat}'
+            grouping[group_stat] = {'$avg': f'$stats.{category}.{stat}'}
+            sub_proj[stat] = f'${group_stat}'
+        projection[category] = sub_proj
+
+    return [
+        {'$group': grouping},
+        {'$project': projection}
+    ]
 
 class Analysis(Resource):
     @auth_required
@@ -17,32 +27,10 @@ class Analysis(Resource):
         players = mongo.db.players
         schema = FOOTBALL
         position = request.args.get('position')
-        result = {}
-        for category in get_stat_categories(schema):
-            pipeline = []
-            if position is not None:
-                pipeline.append({
-                    '$match': {
-                        'meta.position': request.args.get('position')
-                    }
-                })
-
-            # add { '$addFields': { 'position': '$_id' } } to include position
-            # in response
-            pipeline.extend([
-                {
-                    '$group': get_avg_aggregation(schema, category), 
-                },
-                {
-                    '$project': {
-                        '_id': False,
-                    }
-                },
-            ])
-            agg_result = list(players.aggregate(pipeline))
-            if request.args.get('position'):
-                # returns list with one arg
-                result[category] = agg_result[0]
-            else:
-                result[category] = agg_result
-        return result, 200
+        pipeline = []
+        if position is not None:
+            pipeline.append({
+                '$match': {'meta.position': position}
+            })
+        pipeline.extend(build_group_aggregation(schema))
+        return list(players.aggregate(pipeline)), 200
