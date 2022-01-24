@@ -22,15 +22,19 @@ def build_group_aggregation(schema):
     ]
 
 class Analysis(Resource):
-    @auth_required
+    # @auth_required
     def get(self):
         players = mongo.db.players
         schema = FOOTBALL
-        position = request.args.get('position')
         pipeline = []
+        position = request.args.get('position')
         if position is not None:
             pipeline.append({
                 '$match': {'meta.position': position}
             })
         pipeline.extend(build_group_aggregation(schema))
+        if position is not None:
+            # list is returned from aggregate with always one element, just
+            # return that instead
+            return list(players.aggregate(pipeline))[0], 200
         return list(players.aggregate(pipeline)), 200
