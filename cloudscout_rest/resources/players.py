@@ -50,11 +50,11 @@ class Players(Resource):
         if args.get('q'):
             query = args.get('q')
             pipeline.append({'$search': {'text': {'query': query, 'fuzzy': {}, 'path': ['meta.first', 'meta.last', 'meta.institution']}}})
-        if args.get('position'):
+        if args.get('positions'):
             pipeline.append({'$match': {'meta.position': {'$in': [arg.upper() for arg in args['position'].split(',')]}}})
-        if args.get('division'):
+        if args.get('divisions'):
             pipeline.append({'$match': {'meta.division': {'$in': [int(arg) for arg in args['division'].split(',')]}}})
-        if args.get('class'):
+        if args.get('classes'):
             pipeline.append({'$match': {'meta.class': {'$in': [int(arg) for arg in args['class'].split(',')]}}})
         if args.get('limit') and args.get('limit').isnumeric():
             pipeline.append({'$limit': int(args['limit'])})

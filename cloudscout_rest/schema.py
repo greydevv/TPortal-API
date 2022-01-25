@@ -59,21 +59,21 @@ USER = {
                 'default_filters': {
                     'type': 'object',
                     'properties': {
-                        'division': {
+                        'divisions': {
                             'type': 'array',
                             'items': {
                                 'type': ['number', 'null'],
                                 'enum': [None,1,2,3]
                             }
                         },
-                        'class': {
+                        'classes': {
                             'type': 'array',
                             'items': {
                                 'type': ['number', 'null'],
                                 'enum': [None,1,2,3,4,5]
                             }
                         },
-                        'position': {
+                        'positions': {
                             'type': 'array',
                             'items': {
                                 'type': ['string', 'null'],
