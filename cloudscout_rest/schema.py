@@ -83,9 +83,9 @@ USER = {
                     },
                     'additionalProperties': False,
                     'required': [
-                        'division',
-                        'class',
-                        'position'
+                        'divisions',
+                        'classes',
+                        'positions'
                     ]
                 }
             },
