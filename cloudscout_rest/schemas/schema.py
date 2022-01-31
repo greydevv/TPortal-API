@@ -8,7 +8,7 @@ def make_array(schema):
     }
 
 def get_stat_mapping(schema):
-    stats = schema['properties']['stats']['properties']
+    stats = schema.raw()['properties']['stats']['properties']
     stat_map = {}
     for category in stats.keys():
         stat_map[category] = list(stats[category]['properties'].keys())
