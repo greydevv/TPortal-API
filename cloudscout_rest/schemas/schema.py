@@ -18,14 +18,14 @@ IDS = {
     'type': 'array',
     'items': {
         'type': 'string', 
-        'pattern': Patterns.ID,
+        'pattern': Patterns.ID.value,
     }
 }
 
 USER = {
     'type': 'object',
     'properties': {
-        'uid': {'type': 'string', 'pattern': Patterns.USER_ID},
+        'uid': {'type': 'string', 'pattern': Patterns.USER_ID.value},
         'meta': {
             'type': 'object',
             'properties': {
