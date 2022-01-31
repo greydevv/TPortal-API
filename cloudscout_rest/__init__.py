@@ -1,14 +1,31 @@
 import os
 from datetime import timedelta
 from flask import Flask
+from flask.json import JSONEncoder
 from flask_restful import Api
 from flask_cors import CORS
+from bson import ObjectId
+from werkzeug.routing import BaseConverter
 from dotenv import load_dotenv
 from cloudscout_rest.ext import mongo
 from cloudscout_rest.resources.players import Players, Player
 from cloudscout_rest.resources.users import Users, User
 from cloudscout_rest.resources.analysis import Analysis
 from cloudscout_rest.exceptions import ApiException
+
+# class MongoJSONEncoder(JSONEncoder):
+#     def default(self, o):
+#         if isinstance(o, ObjectId):
+#             return str(o)
+#         else:
+#             return super().default(o)
+
+# class ObjectIdConverter(BaseConverter):
+#     def to_python(self, value):
+#         return ObjectId(value)
+
+#     def to_url(self, value):
+#         return str(value)
 
 class CloudscoutApi(Api):
     """
@@ -29,6 +46,8 @@ def get_env_or_raise(key):
 def create_app():
     load_dotenv()
     app = Flask(__name__)
+    # app.json_encoder = MongoJSONEncoder
+    # app.url_map.converters['objectid'] = ObjectIdConverter
     CORS(app)
 
     # raise ValueError if required environment variables are not present

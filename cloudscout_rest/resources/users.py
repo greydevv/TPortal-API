@@ -2,7 +2,7 @@ from flask import request
 from flask_restful import Resource
 from cloudscout_rest.ext import bcrypt, mongo
 from cloudscout_rest.exceptions import DuplicateKeyError, ResourceNotFoundError
-from cloudscout_rest.schema import USER
+from cloudscout_rest.schemas.schema import USER
 from cloudscout_rest.common.auth_required import auth_required
 from cloudscout_rest.common.validate_json import assertjson
 

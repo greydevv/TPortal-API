@@ -1,9 +1,9 @@
-from flask import request
+from flask import request, jsonify
 from flask_restful import Resource
-# from flask_jwt_extended import jwt_required
 from cloudscout_rest.ext import mongo
 from cloudscout_rest.exceptions import DuplicateKeyError, ResourceNotFoundError
-from cloudscout_rest.schema import make_array, FOOTBALL, IDS
+from cloudscout_rest.schemas.schema import make_array, IDS
+from cloudscout_rest.schemas.players import FOOTBALL
 from cloudscout_rest.common.validate_json import assertjson
 from cloudscout_rest.common.auth_required import auth_required
 
@@ -50,6 +50,16 @@ class Players(Resource):
         if args.get('q'):
             query = args.get('q')
             pipeline.append({'$search': {'text': {'query': query, 'fuzzy': {}, 'path': ['meta.first', 'meta.last', 'meta.institution']}}})
+            pipeline.append({
+                '$sort': {
+                    'meta.institution': {'$meta': 'textScore'},
+                    'meta.last': {'$meta': 'textScore'},
+                    'meta.first': {'$meta': 'textScore'},
+                    # SHOULDN'T I BE SORTING BY DATE?
+                    '_id': 1,
+            }})
+        else:
+            pipeline.append({'$sort': {'meta.date': -1}})
         if args.get('positions'):
             pipeline.append({'$match': {'meta.position': {'$in': [arg.upper() for arg in args['positions'].split(',')]}}})
         if args.get('divisions'):
@@ -61,17 +71,6 @@ class Players(Resource):
         if args.get('pids'):
             pipeline.append({'$match': {'pid': {'$in': [arg for arg in args['pids'].split(',')]}}})
         pipeline.append({'$project': {'_id': False}})
-        if not args.get('q'):
-            pipeline.append({'$sort': {'meta.date': -1}})
-        else:
-            pipeline.append({
-                '$sort': {
-                    'meta.institution': {'$meta': 'textScore'},
-                    'meta.last': {'$meta': 'textScore'},
-                    'meta.first': {'$meta': 'textScore'},
-                    # SHOULDN'T I BE SORTING BY DATE?
-                    '_id': 1,
-                }})
         return pipeline
 
     @staticmethod
