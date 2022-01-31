@@ -23,7 +23,7 @@ def build_group_aggregation(schema):
     ]
 
 class Analysis(Resource):
-    # @auth_required
+    @auth_required
     def get(self):
         players = mongo.db.players
         schema = FOOTBALL
