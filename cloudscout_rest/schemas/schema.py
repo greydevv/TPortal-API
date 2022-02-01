@@ -34,11 +34,7 @@ USER = {
                 'institution': {'type': 'string'},
             },
             'additionalProperties': False,
-            'required': [
-                'first',
-                'last',
-                'institution',
-            ]
+            'required': ['first', 'last', 'institution']
         },
         'account': {
             'type': 'object',
@@ -70,26 +66,28 @@ USER = {
                         }
                     },
                     'additionalProperties': False,
-                    'required': [
-                        'divisions',
-                        'classes',
-                        'positions'
-                    ]
+                    'required': ['divisions', 'classes', 'positions']
+                },
+                'advanced_filters': {
+                    'type': 'array',
+                    'items': {
+                        'type': 'object',
+                        'properties': {
+                            'stat': {'type': 'string'},
+                            'op': {'type': 'string', 'enum': ['gt', 'lt', 'eq']},
+                            'value': {'type': 'number'}
+                        },
+                        'additionalProperties': False,
+                        'required': ['stat', 'op', 'value']
+                    }
                 }
             },
             'additionalProperties': False,
-            'required': [
-                'favorites',
-                'default_filters'
-            ]
+            'required': ['favorites', 'default_filters', 'advanced_filters']
         },
     },
     'additionalProperties': False,
-    'required': [
-        'uid',
-        'meta',
-        'account',
-    ]
+    'required': ['uid', 'meta', 'account']
 }
 
 
