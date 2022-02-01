@@ -64,6 +64,13 @@ class Players(Resource):
             pipeline.append({'$match': {'meta.position': {'$in': [arg.upper() for arg in args['positions'].split(',')]}}})
         if args.get('divisions'):
             pipeline.append({'$match': {'meta.division': {'$in': [int(arg) for arg in args['divisions'].split(',')]}}})
+        if args.get('advanced'):
+            for f in args['advanced'].split(','):
+                f_split = f.split(';')
+                stat = f'stats.{f_split[0]}'
+                op = f'${f_split[1]}'
+                value = int(f_split[2])
+                pipeline.append({'$match': {stat: {op: value}}})
         if args.get('classes'):
             pipeline.append({'$match': {'meta.class': {'$in': [int(arg) for arg in args['classes'].split(',')]}}})
         if args.get('limit') and args.get('limit').isnumeric():
