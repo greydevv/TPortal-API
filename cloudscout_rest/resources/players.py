@@ -73,10 +73,22 @@ class Players(Resource):
                 pipeline.append({'$match': {stat: {op: value}}})
         if args.get('classes'):
             pipeline.append({'$match': {'meta.class': {'$in': [int(arg) for arg in args['classes'].split(',')]}}})
-        if args.get('limit') and args.get('limit').isnumeric():
-            pipeline.append({'$limit': int(args['limit'])})
         if args.get('pids'):
             pipeline.append({'$match': {'pid': {'$in': [arg for arg in args['pids'].split(',')]}}})
+
+        limit = 50
+        if args.get('limit') and args.get('limit').isnumeric():
+            limit = int(args['limit'])
+            # pipeline.append({'$limit': int(args['limit'])})
+        page = 1
+        if args.get('page') and args.get('page').isnumeric():
+            page = int(args['page'])
+        pipeline.append({
+            '$facet': {
+                'meta': [{'$count': 'total'}],
+                'data': [{'$skip': (page-1)*limit}, {'$limit': limit}, {'$project': {'_id': False}}] 
+            }
+        })
         pipeline.append({'$project': {'_id': False}})
         return pipeline
 
