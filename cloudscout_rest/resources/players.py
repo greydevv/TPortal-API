@@ -8,7 +8,7 @@ from cloudscout_rest.common.validate_json import assertjson
 from cloudscout_rest.common.auth_required import auth_required
 
 class Players(Resource):
-    # @auth_required
+    @auth_required
     def get(self):
         players = mongo.db.players
         pipeline = self.__build_pipeline(request.args)
