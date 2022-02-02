@@ -8,11 +8,11 @@ from cloudscout_rest.common.validate_json import assertjson
 from cloudscout_rest.common.auth_required import auth_required
 
 class Players(Resource):
-    @auth_required
+    # @auth_required
     def get(self):
         players = mongo.db.players
         pipeline = self.__build_pipeline(request.args)
-        data = list(players.aggregate(pipeline))
+        data = list(players.aggregate(pipeline))[0]
         return data, 200
     
     @auth_required
@@ -85,11 +85,11 @@ class Players(Resource):
             page = int(args['page'])
         pipeline.append({
             '$facet': {
-                'meta': [{'$count': 'total'}],
+                'total': [{'$count': 'total'}],
                 'data': [{'$skip': (page-1)*limit}, {'$limit': limit}, {'$project': {'_id': False}}] 
             }
         })
-        pipeline.append({'$project': {'_id': False}})
+        pipeline.append({'$addFields': {'total': {'$ifNull': [{'$arrayElemAt': ['$total.total', 0]}, 0]}}})
         return pipeline
 
     @staticmethod
