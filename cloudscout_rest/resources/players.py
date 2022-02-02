@@ -59,7 +59,7 @@ class Players(Resource):
                     '_id': 1,
             }})
         else:
-            pipeline.append({'$sort': {'meta.date': -1}})
+            pipeline.append({'$sort': {'meta.date': -1, '_id': -1}})
         if args.get('positions'):
             pipeline.append({'$match': {'meta.position': {'$in': [arg.upper() for arg in args['positions'].split(',')]}}})
         if args.get('divisions'):
@@ -69,7 +69,7 @@ class Players(Resource):
                 f_split = f.split(';')
                 stat = f'stats.{f_split[0]}'
                 op = f'${f_split[1]}'
-                value = int(f_split[2])
+                value = float(f_split[2])
                 pipeline.append({'$match': {stat: {op: value}}})
         if args.get('classes'):
             pipeline.append({'$match': {'meta.class': {'$in': [int(arg) for arg in args['classes'].split(',')]}}})
