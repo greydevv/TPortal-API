@@ -14,6 +14,15 @@ def get_stat_mapping(schema):
         stat_map[category] = list(stats[category]['properties'].keys())
     return stat_map
 
+def get_sport_names():
+    names = []
+    for s in Sports:
+        if isinstance(s.value.name, list):
+            names.extend(s.value.name)
+        else:
+            names.append(s.value.name)
+    return names
+
 IDS = {
     'type': 'array',
     'items': {
@@ -32,7 +41,7 @@ USER = {
                 'first': {'type': 'string'},
                 'last': {'type': 'string'},
                 'institution': {'type': 'string'},
-                'sport': {'type': 'string', 'enum': [s.value.name for s in Sports]}
+                'sport': {'type': 'string', 'enum': get_sport_names()}
             },
             'additionalProperties': False,
             'required': ['first', 'last', 'institution']
