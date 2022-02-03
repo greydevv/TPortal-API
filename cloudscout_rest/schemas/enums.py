@@ -20,6 +20,6 @@ class Sports(Enum):
     HOCKEY = SportData(['MENS_ICE_HOCKEY', 'WOMENS_ICE_HOCKEY'], ['G', 'D', 'F'])
     SOCCER = SportData(['MENS_SOCCER', 'WOMENS_SOCCER'], ['GK', 'D', 'M', 'F'])
     LACROSSE = SportData(['MENS_LACROSSE', 'WOMENS_LACROSSE'], ['M', 'FO', 'DM', 'ATT', 'D', 'M', 'GK'])
-    VOLLEYBALL = SportData(['MENS_VOLLEYBALL', 'WOMENS_VOLLEYBALL'], ['L', 'MB', 'OH', 'OPP', 'S', 'RS'])
+    VOLLEYBALL = SportData(['MENS_VOLLEYBALL', 'WOMENS_VOLLEYBALL'], ['L', 'MB', 'OH', 'OPP', 'S', 'RS', 'DS'])
     FIELD_HOCKEY = SportData('FIELD_HOCKEY', ['M', 'GK', 'F', 'B'])
     SOFTBALL = SportData('SOFTBALL', ['C', 'INF', 'OF', 'SP/RP', 'RP', 'UT', 'SS'])
