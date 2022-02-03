@@ -22,11 +22,28 @@ def build_group_aggregation(schema):
         {'$project': projection}
     ]
 
+SCHEMA_MAP = {
+    'FOOTBALL': FOOTBALL,
+    'BASEBALL': BASEBALL,
+    'MENS_BASKETBALL': BASKETBALL,
+    'WOMENS_BASKETBALL': BASKETBALL,
+    'MENS_HOCKEY': HOCKEY,
+    'WOMENS_HOCKEY': HOCKEY,
+    'MENS_SOCCER': SOCCER,
+    'WOMENS_SOCCER': SOCCER,
+    'MENS_LACROSSE': LACROSSE,
+    'WOMENS_LACROSSE': LACROSSE,
+    'MENS_VOLLEYBALL': VOLLEYBALL,
+    'WOMENS_VOLLEYBALL': VOLLEYBALL,
+    'FIELD_HOCKEY': FIELD_HOCKEY,
+    'SOFTBALL': SOFTBALL
+}
+
 class Analysis(Resource):
     @auth_required
     def get(self):
         players = mongo.db.players
-        schema = FOOTBALL
+        schema = SCHEMA_MAP.get(request.args.get('sport'))
         pipeline = []
         position = request.args.get('position')
         if position is not None:
