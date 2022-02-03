@@ -16,6 +16,10 @@ class Patterns(Enum):
 class Sports(Enum):
     FOOTBALL = SportData('FOOTBALL', ['QB', 'WR', 'OL', 'RB', 'TE', 'C', 'OT', 'FB', 'DL', 'DT', 'DE', 'LB', 'DB', 'CB', 'S', 'P', 'K', 'LS'])
     BASEBALL = SportData('BASEBALL', ['P', 'C', 'INF', 'OF', 'UT', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'])
-    BASKETBALL = SportData('BASKETBALL', ['F', 'G', 'C'])
-    SOCCER = SportData('SOCCER', ['GK', 'D', 'M', 'F'])
-    LACROSSE = SportData('LACROSSE', ['M', 'FO', 'DM', 'ATT', 'D', 'M', 'GK'])
+    BASKETBALL = SportData(['MENS_BASKETBALL', 'WOMENS_BASKETBALL'], ['F', 'G', 'C'])
+    HOCKEY = SportData(['MENS_HOCKEY', 'WOMENS_HOCKEY'], ['G', 'D', 'F'])
+    SOCCER = SportData(['MENS_SOCCER', 'WOMENS_SOCCER'], ['GK', 'D', 'M', 'F'])
+    LACROSSE = SportData(['MENS_LACROSSE', 'WOMENS_LACROSSE'], ['M', 'FO', 'DM', 'ATT', 'D', 'M', 'GK'])
+    VOLLEYBALL = SportData(['MENS_VOLLEYBALL', 'WOMENS_VOLLEYBALL'], ['L', 'MB', 'OH', 'OPP', 'S'])
+    FIELD_HOCKEY = SportData('FIELD_HOCKEY', ['M', 'GK', 'F', 'B'])
+    SOFTBALL = SportData('SOFTBALL', ['C', 'INF', 'OF', 'SP/RP', 'UT'])

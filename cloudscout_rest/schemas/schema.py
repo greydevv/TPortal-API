@@ -32,6 +32,7 @@ USER = {
                 'first': {'type': 'string'},
                 'last': {'type': 'string'},
                 'institution': {'type': 'string'},
+                'sport': {'type': 'string', 'enum': [s.value.name for s in Sports]}
             },
             'additionalProperties': False,
             'required': ['first', 'last', 'institution']

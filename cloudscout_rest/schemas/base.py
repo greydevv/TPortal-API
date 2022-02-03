@@ -78,8 +78,6 @@ class PlayerSchema(SchemaObject):
                         'institution': {'type': ['string', 'null']},
                         'last': {'type': ['string', 'null']},
                         'position': {'type': ['string', 'null'], 'enum': [None] + self.sport.positions},
-                        # include gender?
-                        'sport': {'type': ['string', 'null'], 'const': self.sport.name},
                         'year': {'type': ['string', 'null'], 'pattern': Patterns.YEAR_RANGE.value},
                     },
                     'additionalProperties': False,
@@ -105,4 +103,14 @@ class PlayerSchema(SchemaObject):
             'additionalProperties': False,
             'required': ['pid', 'meta', 'stats']
         }
+
+        # Men's and women's sports have same stat structure, only difference is
+        # sport name. So, we accept both WOMENS_{SPORT} and MENS_{SPORT} as
+        # valid sport arguments
+        sport_prop = {'type': ['string', 'null']}
+        if isinstance(self.sport.name, list):
+            sport_prop['enum'] = self.sport.name
+        else:
+            sport_prop['const'] = self.sport.name
+        schema['properties']['meta']['properties']['sport'] = sport_prop
         return schema

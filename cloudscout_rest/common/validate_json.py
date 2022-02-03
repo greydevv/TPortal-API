@@ -12,7 +12,19 @@ def assertjson(schema):
             if not request.json:
                 return responsify_err(NoJsonError)
             try:
-                validate(request.json, schema)
+                if isinstance(schema, list):
+                    # for accepting multiple schemas
+                    errors = None
+                    for s in schema:
+                        try: 
+                            validate(request.json, s)
+                            return func(*args, **kwargs)
+                        except ValidationError as err:
+                            errors = err
+                    if errors:
+                        return responsify_err(errors)
+                else:
+                    validate(request.json, schema)
             except ValidationError as err:
                 return responsify_err(err)
             return func(*args, **kwargs)
