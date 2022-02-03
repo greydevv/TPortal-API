@@ -75,6 +75,8 @@ class Players(Resource):
             }})
         else:
             pipeline.append({'$sort': {'meta.date': -1, '_id': -1}})
+        if args.get('sport'):
+            pipeline.append({'$match': {'meta.sport': args['sport'].upper()}})
         if args.get('positions'):
             pipeline.append({'$match': {'meta.position': {'$in': [arg.upper() for arg in args['positions'].split(',')]}}})
         if args.get('divisions'):
