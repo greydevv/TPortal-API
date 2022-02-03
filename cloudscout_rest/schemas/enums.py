@@ -22,4 +22,4 @@ class Sports(Enum):
     LACROSSE = SportData(['MENS_LACROSSE', 'WOMENS_LACROSSE'], ['M', 'FO', 'DM', 'ATT', 'D', 'M', 'GK'])
     VOLLEYBALL = SportData(['MENS_VOLLEYBALL', 'WOMENS_VOLLEYBALL'], ['L', 'MB', 'OH', 'OPP', 'S'])
     FIELD_HOCKEY = SportData('FIELD_HOCKEY', ['M', 'GK', 'F', 'B'])
-    SOFTBALL = SportData('SOFTBALL', ['C', 'INF', 'OF', 'SP/RP', 'UT'])
+    SOFTBALL = SportData('SOFTBALL', ['C', 'INF', 'OF', 'SP/RP', 'UT', 'SS'])
