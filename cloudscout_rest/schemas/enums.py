@@ -14,7 +14,7 @@ class Patterns(Enum):
     YEAR_RANGE = r'^[0-9]{2}-[0-9]{2}$'
 
 class Sports(Enum):
-    FOOTBALL = SportData('FOOTBALL', ['QB', 'WR', 'OL', 'RB', 'TE', 'C', 'OT', 'FB', 'DL', 'DT', 'DE', 'LB', 'DB', 'CB', 'S', 'P', 'K', 'LS'])
+    FOOTBALL = SportData('FOOTBALL', ['QB', 'WR', 'OL', 'RB', 'TE', 'C', 'OT', 'FB', 'DL', 'DT', 'DE', 'LB', 'DB', 'CB', 'S', 'P', 'K', 'LS', 'OG'])
     BASEBALL = SportData('BASEBALL', ['P', 'C', 'INF', 'OF', 'UT', '1B', '2B', '3B', 'SS', 'LF', 'CF', 'RF', 'DH'])
     BASKETBALL = SportData(['MENS_BASKETBALL', 'WOMENS_BASKETBALL'], ['F', 'G', 'C'])
     HOCKEY = SportData(['MENS_ICE_HOCKEY', 'WOMENS_ICE_HOCKEY'], ['G', 'D', 'F'])
