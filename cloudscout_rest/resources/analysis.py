@@ -3,7 +3,9 @@ from flask_restful import Resource
 from cloudscout_rest.ext import mongo
 from cloudscout_rest.common.auth_required import auth_required
 from cloudscout_rest.schemas.schema import get_stat_mapping
-from cloudscout_rest.schemas.players import FOOTBALL
+from cloudscout_rest.schemas.players import (FOOTBALL, BASEBALL, BASKETBALL, 
+                                             HOCKEY, SOCCER, LACROSSE, 
+                                             VOLLEYBALL, FIELD_HOCKEY, SOFTBALL)
 
 def build_group_aggregation(schema):
     stat_mapping = get_stat_mapping(schema)
