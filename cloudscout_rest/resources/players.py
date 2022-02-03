@@ -42,7 +42,7 @@ class Players(Resource):
         ins_result = players.insert_many(request.json)
         return {}, 200
 
-    @auth_required
+    # @auth_required
     @assertjson(accept_all())
     def post(self):
         players = mongo.db.players
@@ -121,7 +121,7 @@ class Players(Resource):
         return dup_pids
 
 class Player(Resource):
-    @auth_required
+    # @auth_required
     def get(self, pid):
         players = mongo.db.players
         data = players.find_one({'pid': pid}, {'_id': False})
