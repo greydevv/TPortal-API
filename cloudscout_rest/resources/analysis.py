@@ -1,11 +1,9 @@
 from flask import request
 from flask_restful import Resource
 from cloudscout_rest.ext import mongo
-from cloudscout_rest.common.auth_required import auth_required
 from cloudscout_rest.schemas.schema import get_stat_mapping
-from cloudscout_rest.schemas.players import (FOOTBALL, BASEBALL, BASKETBALL, 
-                                             HOCKEY, SOCCER, LACROSSE, 
-                                             VOLLEYBALL, FIELD_HOCKEY, SOFTBALL)
+from cloudscout_rest.common.auth_required import auth_required
+from cloudscout_rest.schemas.players import SPORT_NAME_MAPPING
 
 def build_group_aggregation(schema):
     stat_mapping = get_stat_mapping(schema)
@@ -24,37 +22,18 @@ def build_group_aggregation(schema):
         {'$project': projection}
     ]
 
-SCHEMA_MAP = {
-    'FOOTBALL': FOOTBALL,
-    'BASEBALL': BASEBALL,
-    'MENS_BASKETBALL': BASKETBALL,
-    'WOMENS_BASKETBALL': BASKETBALL,
-    'MENS_ICE_HOCKEY': HOCKEY,
-    'WOMENS_ICE_HOCKEY': HOCKEY,
-    'MENS_SOCCER': SOCCER,
-    'WOMENS_SOCCER': SOCCER,
-    'MENS_LACROSSE': LACROSSE,
-    'WOMENS_LACROSSE': LACROSSE,
-    'MENS_VOLLEYBALL': VOLLEYBALL,
-    'WOMENS_VOLLEYBALL': VOLLEYBALL,
-    'FIELD_HOCKEY': FIELD_HOCKEY,
-    'SOFTBALL': SOFTBALL
-}
-
 class Analysis(Resource):
     @auth_required
     def get(self):
+        if request.args.get('sport') is None:
+            return {'msg': "expected required 'sport' argument"}, 400
+        if request.args.get('position') is None:
+            return {'msg': "expected required 'position' argument"}, 400
+
         players = mongo.db.players
-        schema = SCHEMA_MAP.get(request.args.get('sport'))
-        pipeline = []
-        position = request.args.get('position')
-        if position is not None:
-            pipeline.append({
-                '$match': {'meta.position': position}
-            })
+        schema = SPORT_NAME_MAPPING.get(request.args['sport'])
+        position = request.args['position']
+        pipeline = [{'$match': {'meta.position': position}}]
         pipeline.extend(build_group_aggregation(schema))
-        if position is not None:
-            # list is returned from aggregate with always one element, just
-            # return that instead
-            return list(players.aggregate(pipeline))[0], 200
-        return list(players.aggregate(pipeline)), 200
+        data = list(players.aggregate(pipeline))[0]
+        return data, 200

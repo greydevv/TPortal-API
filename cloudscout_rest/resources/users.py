@@ -4,11 +4,11 @@ from cloudscout_rest.ext import bcrypt, mongo
 from cloudscout_rest.exceptions import DuplicateKeyError, ResourceNotFoundError
 from cloudscout_rest.schemas.schema import USER
 from cloudscout_rest.common.auth_required import auth_required
-from cloudscout_rest.common.validate_json import assertjson
+from cloudscout_rest.common.validate_json import assertuser
 
 class Users(Resource):
     @auth_required
-    @assertjson(USER)
+    @assertuser
     def post(self):
         users = mongo.db.users
         uid = request.json['uid']
@@ -27,7 +27,7 @@ class User(Resource):
         return data, 200
 
     @auth_required
-    @assertjson(USER)
+    @assertuser
     def put(self, uid):
         users = mongo.db.users
         if not users.find_one({'uid': uid}):

@@ -1,7 +1,10 @@
-from cloudscout_rest.schemas.enums import Patterns
+from flask import request
+from cloudscout_rest.schemas.enums import Patterns, Sports
 
 class SchemaObject:
     """
+    Description:
+    ============
     Base class for wrapping JSON-schema representations.
     """
     def __init__(self, name, properties):
@@ -62,11 +65,29 @@ class PlayerSchema(SchemaObject):
         self.sport = sport.value
         super().__init__(self.sport.name, properties)
 
+    @staticmethod
+    def get_skeleton():
+        skeleton = {
+            'type': 'object',
+            'properties': {
+                'pid': {'type': 'string', 'pattern': '^[0-9]+$'},
+                'meta': {
+                    'type': 'object',
+                    'properties': {
+                        'sport': {'type': 'string', 'enum': Sports.get_names() }
+                    },
+                    'required': ['sport']
+                }
+            },
+            'required': ['pid', 'meta']
+        }
+        return skeleton
+
     def raw(self):
         schema = {
             'type': 'object',
             'properties': {
-                'pid': {'type': 'string', 'pattern': ''},
+                'pid': {'type': 'string', 'pattern': '^[0-9]+$'},
                 'meta': {
                     'type': 'object',
                     'properties': {

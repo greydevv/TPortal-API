@@ -3,24 +3,8 @@ from flask_restful import Resource
 from cloudscout_rest.ext import mongo
 from cloudscout_rest.exceptions import DuplicateKeyError, ResourceNotFoundError
 from cloudscout_rest.schemas.schema import make_array, IDS
-from cloudscout_rest.schemas.players import (FOOTBALL, BASEBALL, BASKETBALL, 
-                                             HOCKEY, SOCCER, LACROSSE, 
-                                             VOLLEYBALL, FIELD_HOCKEY, SOFTBALL)
-from cloudscout_rest.common.validate_json import assertjson
+from cloudscout_rest.common.validate_json import assertplayer
 from cloudscout_rest.common.auth_required import auth_required
-
-def accept_all():
-    return [
-        make_array(FOOTBALL),
-        make_array(BASEBALL),
-        make_array(BASKETBALL),
-        make_array(HOCKEY),
-        make_array(SOCCER),
-        make_array(LACROSSE),
-        make_array(VOLLEYBALL),
-        make_array(FIELD_HOCKEY),
-        make_array(SOFTBALL)
-    ]
 
 class Players(Resource):
     @auth_required
@@ -31,7 +15,7 @@ class Players(Resource):
         return data, 200
     
     @auth_required
-    @assertjson(accept_all())
+    @assertplayer
     def put(self):
         players = mongo.db.players
         pids = [e['pid'] for e in request.json]
@@ -42,8 +26,8 @@ class Players(Resource):
         ins_result = players.insert_many(request.json)
         return {}, 200
 
-    # @auth_required
-    @assertjson(accept_all())
+    @auth_required
+    @assertplayer
     def post(self):
         players = mongo.db.players
         dup_pids = self.__get_dup_pids(request.json)
@@ -53,7 +37,7 @@ class Players(Resource):
         return {}, 200
 
     @auth_required
-    @assertjson(accept_all())
+    @assertplayer
     def delete(self):
         players = mongo.db.players
         result = players.delete_many({'pid': {'$in': request.json}})
@@ -121,7 +105,7 @@ class Players(Resource):
         return dup_pids
 
 class Player(Resource):
-    # @auth_required
+    @auth_required
     def get(self, pid):
         players = mongo.db.players
         data = players.find_one({'pid': pid}, {'_id': False})

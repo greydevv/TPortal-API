@@ -1,39 +1,39 @@
 from flask import request
 from functools import wraps
+from cloudscout_rest.schemas.base import PlayerSchema
+from cloudscout_rest.schemas.players import SPORT_NAME_MAPPING 
+from cloudscout_rest.schemas.schema import USER
 from jsonschema import ValidationError, validate
 
 class NoJsonError(Exception):
     message = 'No JSON supplied'
 
-def assertjson(schema):
-    def wrapper(func):
-        @wraps(func)
-        def decorated(*args, **kwargs):
-            if not request.json:
-                return responsify_err(NoJsonError)
-            try:
-                if isinstance(schema, list):
-                    # for accepting multiple schemas
-                    errors = None
-                    for s in schema:
-                        try: 
-                            validate(request.json, s)
-                            return func(*args, **kwargs)
-                        except ValidationError as err:
-                            errors = err
-                    if errors:
-                        return responsify_err(errors)
-                else:
-                    validate(request.json, schema)
-            except ValidationError as err:
-                return responsify_err(err)
-            return func(*args, **kwargs)
-        return decorated
-    return wrapper
+def assertplayer(func):
+    @wraps(func)
+    def inner(*args, **kwargs):
+        try: 
+            # initial validation to get sport
+            validate(request.json, PlayerSchema.get_skeleton())
+            sport = request.json['meta']['sport']
+            validate(request.json, SPORT_NAME_MAPPING[sport].raw())
+        except ValidationError as err:
+            return responsify_err(err)
+        return func(*args, **kwargs)
+    return inner
+
+def assertuser(func):
+    @wraps(func)
+    def inner(*args, **kwargs):
+        try:
+            validate(request.json, USER)
+        except ValidationError as err:
+            return responsify_err(err)
+        return func(*args, **kwargs)
+    return inner
 
 def responsify_err(err):
     payload = {
-        'message': 'Invalid JSON',
+        'msg': 'Invalid JSON',
         'json': request.json,
         'reason': err.message
     } 

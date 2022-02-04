@@ -23,3 +23,14 @@ class Sports(Enum):
     VOLLEYBALL = SportData(['MENS_VOLLEYBALL', 'WOMENS_VOLLEYBALL'], ['L', 'MB', 'OH', 'OPP', 'S', 'RS', 'DS'])
     FIELD_HOCKEY = SportData('FIELD_HOCKEY', ['M', 'GK', 'F', 'B'])
     SOFTBALL = SportData('SOFTBALL', ['C', 'INF', 'OF', 'SP/RP', 'RP', 'UT', 'SS'])
+
+    @classmethod
+    def get_names(cls):
+        names = []
+        for e in cls:
+            name = e.value.name
+            if isinstance(name, list):
+                names.extend(name)
+            else:
+                names.append(name)
+        return names
