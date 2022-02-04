@@ -15,7 +15,10 @@ def assertplayer(func):
             # initial validation to get sport
             validate(request.json, PlayerSchema.get_skeleton())
             sport = request.json['meta']['sport']
-            validate(request.json, SPORT_NAME_MAPPING[sport].raw())
+            validate(request.json, {
+                'type': 'array',
+                'items': SPORT_NAME_MAPPING[sport].raw()
+            })
         except ValidationError as err:
             return responsify_err(err)
         return func(*args, **kwargs)
