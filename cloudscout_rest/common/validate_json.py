@@ -13,7 +13,10 @@ def assertplayer(func):
     def inner(*args, **kwargs):
         try: 
             # initial validation to get sport
-            validate(request.json, PlayerSchema.get_skeleton())
+            validate(request.json, {
+                'type': 'array',
+                'items': PlayerSchema.get_skeleton()
+            })
             sport = request.json['meta']['sport']
             validate(request.json, {
                 'type': 'array',
