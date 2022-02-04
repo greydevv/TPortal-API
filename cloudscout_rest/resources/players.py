@@ -7,7 +7,7 @@ from cloudscout_rest.common.validate_json import assertplayer
 from cloudscout_rest.common.auth_required import auth_required
 
 class Players(Resource):
-    @auth_required
+    # @auth_required
     def get(self):
         players = mongo.db.players
         pipeline = self.__build_pipeline(request.args)
@@ -26,7 +26,7 @@ class Players(Resource):
         ins_result = players.insert_many(request.json)
         return {}, 200
 
-    @auth_required
+    # @auth_required
     @assertplayer
     def post(self):
         players = mongo.db.players
