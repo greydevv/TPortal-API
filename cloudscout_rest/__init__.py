@@ -13,20 +13,6 @@ from cloudscout_rest.resources.users import Users, User
 from cloudscout_rest.resources.analysis import Analysis
 from cloudscout_rest.exceptions import ApiException
 
-# class MongoJSONEncoder(JSONEncoder):
-#     def default(self, o):
-#         if isinstance(o, ObjectId):
-#             return str(o)
-#         else:
-#             return super().default(o)
-
-# class ObjectIdConverter(BaseConverter):
-#     def to_python(self, value):
-#         return ObjectId(value)
-
-#     def to_url(self, value):
-#         return str(value)
-
 class CloudscoutApi(Api):
     """
     A subclass of the flask_restful 'Api' object for custom behavior.
@@ -46,8 +32,6 @@ def get_env_or_raise(key):
 def create_app():
     load_dotenv()
     app = Flask(__name__)
-    # app.json_encoder = MongoJSONEncoder
-    # app.url_map.converters['objectid'] = ObjectIdConverter
     CORS(app)
 
     # raise ValueError if required environment variables are not present
