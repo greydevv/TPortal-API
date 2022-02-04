@@ -7,7 +7,7 @@ from cloudscout_rest.common.validate_json import assertplayer
 from cloudscout_rest.common.auth_required import auth_required
 
 class Players(Resource):
-    # @auth_required
+    @auth_required
     def get(self):
         players = mongo.db.players
         pipeline = self.__build_pipeline(request.args)
@@ -105,7 +105,7 @@ class Players(Resource):
         return dup_pids
 
 class Player(Resource):
-    @auth_required
+    # @auth_required
     def get(self, pid):
         players = mongo.db.players
         data = players.find_one({'pid': pid}, {'_id': False})
