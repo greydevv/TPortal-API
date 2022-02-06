@@ -32,7 +32,6 @@ USER = {
                 'first': {'type': 'string'},
                 'last': {'type': 'string'},
                 'institution': {'type': 'string'},
-                'sport': {'type': 'string', 'enum': Sports.get_names()}
             },
             'additionalProperties': False,
             'required': ['first', 'last', 'institution']
@@ -41,7 +40,6 @@ USER = {
             'type': 'object',
             'properties': {
                 'favorites': IDS,
-                'sport': {'type': 'string'},
                 'default_filters': {
                     'type': 'object',
                     'properties': {
@@ -81,10 +79,11 @@ USER = {
                         'additionalProperties': False,
                         'required': ['stat', 'op', 'value']
                     }
-                }
+                },
+                'sport': {'type': 'string', 'enum': Sports.get_names()}
             },
             'additionalProperties': False,
-            'required': ['favorites', 'default_filters', 'advanced_filters']
+            'required': ['favorites', 'default_filters', 'advanced_filters', 'sport']
         },
     },
     'additionalProperties': False,
