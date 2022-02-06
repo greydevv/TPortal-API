@@ -72,12 +72,13 @@ USER = {
                     'items': {
                         'type': 'object',
                         'properties': {
+                            'sport': {'type': 'string', 'enum': Sports.get_names()},
                             'stat': {'type': 'string'},
                             'op': {'type': 'string', 'enum': ['gt', 'lt', 'eq']},
                             'value': {'type': 'number'}
                         },
                         'additionalProperties': False,
-                        'required': ['stat', 'op', 'value']
+                        'required': ['sport', 'stat', 'op', 'value']
                     }
                 },
                 'sport': {'type': 'string', 'enum': Sports.get_names()}
