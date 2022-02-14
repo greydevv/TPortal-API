@@ -3,6 +3,7 @@ from functools import wraps
 from cloudscout_rest.schemas.base import PlayerSchema
 from cloudscout_rest.schemas.players import SPORT_NAME_MAPPING 
 from cloudscout_rest.schemas.schema import USER
+from cloudscout_rest.exceptions import InvalidJsonError
 from jsonschema import ValidationError, validate
 
 class NoJsonError(Exception):
@@ -18,7 +19,7 @@ def assertplayer(func):
                 sport = player['meta']['sport']
                 validate(player, SPORT_NAME_MAPPING[sport].raw())
         except ValidationError as err:
-            return responsify_err(err)
+            raise InvalidJsonError(msg=f'Invalid JSON: {err.message}')
         return func(*args, **kwargs)
     return inner
 
@@ -28,14 +29,6 @@ def assertuser(func):
         try:
             validate(request.json, USER)
         except ValidationError as err:
-            return responsify_err(err)
+            raise InvalidJsonError(msg=f'Invalid JSON: {err.message}')
         return func(*args, **kwargs)
     return inner
-
-def responsify_err(err):
-    payload = {
-        'msg': 'Invalid JSON',
-        'json': request.json,
-        'reason': err.message
-    } 
-    return payload, 400

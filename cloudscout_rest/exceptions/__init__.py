@@ -14,9 +14,6 @@ class ApiException(Exception):
     def get_response(self) -> Response:
         return make_response(self.response, self.code)
 
-
-# AUTHORIZATION
-
 class AuthorizationError(ApiException):
     """
     Raised when authorization fails for a protected resource.
@@ -42,3 +39,12 @@ class ResourceNotFoundError(ApiException):
     """
     code = 404
     msg = 'Resource does not exist in the database'
+
+class InvalidJsonError(ApiException):
+    """
+    Raised when the received JSON is invalid according to the defined schemas.
+    """
+    code = 400
+    def __init__(self, msg, **kwargs):
+        super().__init__(code=self.code, msg=msg, **kwargs)
+        self.msg = msg
