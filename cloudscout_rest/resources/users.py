@@ -33,8 +33,8 @@ class User(Resource):
         if not users.find_one({'uid': uid}):
             raise ResourceNotFoundError(data=uid)
 
-        # check if user is attempting to update uid and check if it would cause
-        # a duplicate
+        # check if API user is attempting to update uid and check if it would
+        # cause a duplicate
         if request.json['uid'] != uid and users.find_one({'uid': request.json['uid']}) is not None:
             raise DuplicateKeyError(data=uid)
         result = users.replace_one({'uid': uid}, request.json)
