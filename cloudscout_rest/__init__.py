@@ -8,8 +8,8 @@ from bson import ObjectId
 from werkzeug.routing import BaseConverter
 from dotenv import load_dotenv
 from cloudscout_rest.ext import mongo
-from cloudscout_rest.resources.players import Players, Player
-from cloudscout_rest.resources.users import Users, User
+from cloudscout_rest.resources.player import Players, Player
+from cloudscout_rest.resources.user import Users, User
 from cloudscout_rest.resources.analysis import Analysis
 from cloudscout_rest.exceptions import ApiException
 
