@@ -2,8 +2,7 @@ from flask import request, jsonify
 from flask_restful import Resource
 from cloudscout_rest.ext import mongo
 from cloudscout_rest.exceptions import DuplicateKeyError, ResourceNotFoundError
-from cloudscout_rest.schemas.schema import make_array, IDS
-from cloudscout_rest.common.validate_json import assertplayer
+from cloudscout_rest.common.validate_json import assertplayer, assertids
 from cloudscout_rest.common.auth_required import auth_required
 
 class Players(Resource):
@@ -14,7 +13,7 @@ class Players(Resource):
         data = list(players.aggregate(pipeline))[0]
         return data, 200
     
-    @auth_required
+    # @auth_required
     @assertplayer
     def put(self):
         players = mongo.db.players
@@ -37,7 +36,7 @@ class Players(Resource):
         return {}, 200
 
     @auth_required
-    @assertplayer
+    @assertids
     def delete(self):
         players = mongo.db.players
         result = players.delete_many({'pid': {'$in': request.json}})

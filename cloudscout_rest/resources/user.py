@@ -7,7 +7,7 @@ from cloudscout_rest.common.auth_required import auth_required
 from cloudscout_rest.common.validate_json import assertuser
 
 class Users(Resource):
-    @auth_required
+    # @auth_required
     @assertuser
     def post(self):
         users = mongo.db.users
